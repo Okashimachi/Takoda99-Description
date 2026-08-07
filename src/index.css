@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  --color-base: #fbf9f4;
+  --color-base-raised: #ffffff;
+  --color-base-panel: #f5f1e8;
+  --color-border: #ddd5c4;
+  --color-border-soft: #e9e3d5;
+  --color-ink: #211a12;
+  --color-ink-dim: #5f5748;
+  --color-ink-faint: #948a76;
+
+  --color-planning: #d43b30;
+  --color-planning-bg: rgba(212, 59, 48, 0.08);
+  --color-process: #3f9a5c;
+  --color-process-bg: rgba(63, 154, 92, 0.08);
+  --color-client: #d19a00;
+  --color-client-bg: rgba(209, 154, 0, 0.1);
+  --color-server: #96602f;
+  --color-server-bg: rgba(150, 96, 47, 0.08);
+  --color-art: #d94f8c;
+  --color-art-bg: rgba(217, 79, 140, 0.08);
+  --color-top: #f0740f;
+  --color-top-bg: rgba(240, 116, 15, 0.1);
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: var(--color-base);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection {
+  background: rgba(255, 138, 61, 0.35);
+}
+
+.prose-body h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0 0 0.6em;
+}
+.prose-body p {
+  margin: 0 0 1em;
+  line-height: 1.9;
+  color: var(--color-ink-dim);
+}
+.prose-body p:last-child {
+  margin-bottom: 0;
+}
+.prose-body ul {
+  margin: 0 0 1em;
+  padding-left: 1.3em;
+  list-style: disc;
+  color: var(--color-ink-dim);
+  line-height: 1.8;
+}
+.prose-body li {
+  margin-bottom: 0.35em;
+}
+.prose-body strong {
+  color: var(--color-ink);
+}
+.prose-body code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-base);
+  border: 1px solid var(--color-border-soft);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  color: var(--color-ink);
+}
+
+pre.codeblock {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  background: #211a12;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 10px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  color: #ede7d8;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 6px;
+}
