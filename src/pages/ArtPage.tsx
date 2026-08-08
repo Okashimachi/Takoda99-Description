@@ -19,7 +19,6 @@ const toc = [
 
 const chars = [
   ["customer-normal", "通常客", images.characters.normal],
-  ["customer-bonus", "ヒョウ柄おばちゃん", images.characters.bonus],
   ["customer-claimer", "クレーマー", images.characters.claimer],
   ["customer-buzz", "JK", images.characters.buzz],
   ["customer-comedian", "お笑い芸人", images.characters.comedian],
@@ -140,12 +139,6 @@ export default function ArtPage() {
 
       <Panel title={<SectionHeading id="bg">背景モチーフ</SectionHeading>} accent={accent}>
         <p>通天閣・道頓堀モチーフの背景。フェーズ移行に合わせて画面変化を入れる。</p>
-        <div
-          className="mt-4 aspect-video overflow-hidden rounded-xl border"
-          style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-panel)" }}
-        >
-          <img src={images.art.background} alt="背景" className="h-full w-full object-cover" onError={(e) => (e.currentTarget.style.opacity = "0.15")} />
-        </div>
       </Panel>
 
       <Panel title={<SectionHeading id="sound">サウンド</SectionHeading>} accent={accent}>
