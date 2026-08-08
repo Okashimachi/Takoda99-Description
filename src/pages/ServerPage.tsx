@@ -8,6 +8,7 @@ import { LayerDiagram } from "../components/LayerDiagram";
 const accent = sections.server.accent;
 
 const toc = [
+  { id: "authority", label: "サーバー権威と状態管理" },
   { id: "layers", label: "層アーキテクチャと純関数コア" },
   { id: "room", label: "単一ゴルーチンとロックフリー設計" },
   { id: "transport", label: "99人同期のスパイク・帯域対策" },
@@ -25,6 +26,24 @@ export default function ServerPage() {
       ownerLine="担当: りーせ"
       toc={toc}
     >
+      <Panel title={<SectionHeading id="authority">サーバー権威：全てを支配する状態管理</SectionHeading>} accent={accent}>
+        <p className="mb-4">
+          タコダ99は「サーバー権威（Server Authoritative）」の設計です。クライアント（Unity）は打鍵の正誤判定だけを行い、「注文をさばいた（OrderServed）」ことだけを報告します。
+        </p>
+        <ul className="mt-3">
+          <li><strong>クライアントに計算させない</strong>：「客が怒って帰った」「自分の順位が変わった」「自分が脱落した」といった判定はすべてサーバーが自律的に行います。クライアントからの報告は信用しません（チート防止・同期ズレ防止）。</li>
+          <li><strong>客とお店（Player）の完全な神視点管理</strong>：サーバーは常に「300人の客の実体」と「99店舗」をメモリ上で管理しています。</li>
+        </ul>
+        <div
+          className="mt-4 rounded-xl border-l-4 p-4 text-sm"
+          style={{ borderColor: accent, background: "var(--color-base-panel)", color: "var(--color-ink)" }}
+        >
+          <strong>💡 客（Customer）の移動ロジック</strong><br/>
+          客の実体は <code>customers</code> レジストリに単一のデータとして存在し、「未割当の客（たべたべエリア）」と「各店舗の行列（<code>storeQueues</code>）」の間を、客のIDだけが移動します。<br/>
+          待機中の客もサーバー内で毎フレーム我慢ゲージが削られており、「行列を溜めること自体がリスクになる」というゲーム性をサーバー側で完全にシミュレートしています。
+        </div>
+      </Panel>
+
       <Panel title={<SectionHeading id="layers">層アーキテクチャと純粋関数コア</SectionHeading>} accent={accent}>
         <p className="mb-4">「変わらないもの（コア）を、変わるもの（部品）から守る」ための分離設計です。</p>
         <div className="rounded-xl border p-4" style={{ borderColor: "var(--color-border-soft)" }}>
