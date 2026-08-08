@@ -8,13 +8,13 @@ import { LayerDiagram } from "../components/LayerDiagram";
 const accent = sections.server.accent;
 
 const toc = [
-  { id: "authority", label: "サーバー権威と状態管理" },
-  { id: "layers", label: "層アーキテクチャと純関数コア" },
-  { id: "room", label: "単一ゴルーチンとロックフリー設計" },
-  { id: "transport", label: "99人同期のスパイク・帯域対策" },
-  { id: "disconnect", label: "切断の扱い：例外処理の割り切り" },
-  { id: "liveops", label: "止まらないLiveOps運用" },
-  { id: "infra", label: "あえてのDocker廃止と10秒デプロイ" },
+  { id: "authority", label: "サーバー権威" },
+  { id: "layers", label: "層アーキテクチャ" },
+  { id: "room", label: "ロックフリー設計" },
+  { id: "transport", label: "通信の帯域制御" },
+  { id: "disconnect", label: "切断の扱い" },
+  { id: "liveops", label: "LiveOps運用" },
+  { id: "infra", label: "インフラ最適化" },
 ];
 
 export default function ServerPage() {
@@ -26,7 +26,7 @@ export default function ServerPage() {
       ownerLine="担当: りーせ"
       toc={toc}
     >
-      <Panel title={<SectionHeading id="authority">サーバー権威：全てを支配する状態管理</SectionHeading>} accent={accent}>
+      <Panel title={<SectionHeading id="authority">サーバー権威</SectionHeading>} accent={accent}>
         <p className="mb-4">
           タコダ99は「サーバー権威（Server Authoritative）」の設計です。クライアント（Unity）は打鍵の正誤判定だけを行い、「注文をさばいた（OrderServed）」ことだけを報告します。
         </p>
@@ -69,7 +69,7 @@ export default function ServerPage() {
         </div>
       </Panel>
 
-      <Panel title={<SectionHeading id="layers">層アーキテクチャと純粋関数コア</SectionHeading>} accent={accent}>
+      <Panel title={<SectionHeading id="layers">層アーキテクチャ</SectionHeading>} accent={accent}>
         <p className="mb-4">「変わらないもの（コア）を、変わるもの（部品）から守る」ための分離設計です。</p>
         <div className="rounded-xl border p-4" style={{ borderColor: "var(--color-border-soft)" }}>
           <LayerDiagram />
@@ -82,7 +82,7 @@ export default function ServerPage() {
         <GitHubLink href="https://github.com/Okashimachi/Takoda99-Server">Takoda99-Server</GitHubLink>
       </Panel>
 
-      <Panel title={<SectionHeading id="room">単一ゴルーチンとロックフリー設計</SectionHeading>} accent={accent}>
+      <Panel title={<SectionHeading id="room">ロックフリー設計</SectionHeading>} accent={accent}>
         <p>
           99人からの同時打鍵報告を排他制御（Mutex）でロックするのではなく、1試合につき1つのGoroutineとChannel（<code>inbox</code>）に全て流し込んで直列処理（selectループ）する設計です。
         </p>
@@ -92,7 +92,7 @@ export default function ServerPage() {
         </ul>
       </Panel>
 
-      <Panel title={<SectionHeading id="transport">99人同期のスパイク対策と帯域コントロール</SectionHeading>} accent={accent}>
+      <Panel title={<SectionHeading id="transport">通信の帯域制御</SectionHeading>} accent={accent}>
         <p>
           99人対戦で一番怖い「通信スパイク（O(N^2)の爆発）」を防ぐため、徹底した通信の間引きと非同期化を行っています。
         </p>
@@ -102,7 +102,7 @@ export default function ServerPage() {
         </ul>
       </Panel>
 
-      <Panel title={<SectionHeading id="disconnect">切断の扱い：例外処理を経済モデルに丸投げ</SectionHeading>} accent={accent}>
+      <Panel title={<SectionHeading id="disconnect">切断の扱い</SectionHeading>} accent={accent}>
         <p>
           マルチプレイ特有の「回線落ちしたプレイヤーの扱い」に対して、切断専用の復帰機構やBot化といった複雑な処理をあえて作っていません。
         </p>
@@ -117,7 +117,7 @@ export default function ServerPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="liveops">止まらないLiveOps運用（動的パラメータ更新）</SectionHeading>} accent={accent}>
+      <Panel title={<SectionHeading id="liveops">LiveOps運用</SectionHeading>} accent={accent}>
         <p>
           ハッカソン本番でのトラブルや「人が集まらない」問題に対処するための運用基盤です。
         </p>
@@ -127,7 +127,7 @@ export default function ServerPage() {
         </ul>
       </Panel>
 
-      <Panel title={<SectionHeading id="infra">あえてのDocker廃止と10秒ホットフィックス</SectionHeading>} accent={accent}>
+      <Panel title={<SectionHeading id="infra">インフラ最適化</SectionHeading>} accent={accent}>
         <p>
           GCPの無料枠（メモリ1GBのe2-micro）で99人対戦を動かし切るための、泥臭いインフラ最適化です。
         </p>
