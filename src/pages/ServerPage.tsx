@@ -34,6 +34,31 @@ export default function ServerPage() {
           <li><strong>クライアントに計算させない</strong>：「客が怒って帰った」「自分の順位が変わった」「自分が脱落した」といった判定はすべてサーバーが自律的に行います。クライアントからの報告は信用しません（チート防止・同期ズレ防止）。</li>
           <li><strong>客とお店（Player）の完全な神視点管理</strong>：サーバーは常に「300人の客の実体」と「99店舗」をメモリ上で管理しています。</li>
         </ul>
+
+        <div className="mt-4">
+          <p className="mb-2 text-sm font-bold" style={{ color: "var(--color-ink-dim)" }}>
+            シーケンス図（サーバー主導の試合進行）
+          </p>
+          <CodeBlock>{`[ Client (Unity) ]                  [ Server (Go) ]
+        |                                  |
+        |        CustomerArrived           | (Tick駆動)
+        |<---------------------------------|
+        |                                  | [待機中も我慢ゲージが減る]
+        | (タイピング...)                  |
+        |                                  |
+        |          OrderServed             |
+        |--------------------------------->| [不正検証・行列の先頭か確認]
+        |                                  |
+        |        EvaluationUpdate          |
+        |<---------------------------------| (評価上昇・ランク確定)
+        |                                  |
+        |                                  |
+   (放置・時間切れ)                        |
+        |          CustomerLeft            |
+        |<---------------------------------| [信用(ライフ)減少]
+        |                                  | [信用0なら自滅脱落を確定]`}</CodeBlock>
+        </div>
+
         <div
           className="mt-4 rounded-xl border-l-4 p-4 text-sm"
           style={{ borderColor: accent, background: "var(--color-base-panel)", color: "var(--color-ink)" }}
