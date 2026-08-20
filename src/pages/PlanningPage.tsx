@@ -1,13 +1,14 @@
 import { PageLayout, SectionHeading } from "../components/PageLayout";
 import { Panel } from "../components/Panel";
 import { Disclosure } from "../components/Disclosure";
-import { DecisionLog, DiffBadge, DiffTable, EffortNote, GitHubLink, TermTag } from "../components/Bits";
+import { DecisionLog, DiffTable, EffortNote, GitHubLink, TermTag } from "../components/Bits";
+import { EraDivider, EraStamp, EraZoneHeader } from "../components/Era";
 import { sections } from "../lib/accentTheme";
 
 const accent = sections.planning.accent;
 
 const toc = [
-  { id: "concept", label: "コンセプト" },
+  { id: "concept", label: "コンセプト", group: "予選版 / QUALIFIER", groupColor: "var(--color-ink-faint)" },
   { id: "coreplay", label: "コアプレイ" },
   { id: "twoaxis", label: "評価と信用" },
   { id: "elimination", label: "脱落経路" },
@@ -16,7 +17,7 @@ const toc = [
   { id: "decisions", label: "意思決定ログ" },
   { id: "pivot", label: "ピボットの話" },
   { id: "glossary", label: "用語集の統治" },
-  { id: "honsen", label: "★ 本戦での方針転換" },
+  { id: "honsen", label: "何をどう作り直したか", group: "本戦版 / FINAL" },
   { id: "honsen-why", label: "予選で観測された事実" },
   { id: "honsen-choice", label: "複雑案と単純案" },
   { id: "honsen-score", label: "スコアへの一本化" },
@@ -35,22 +36,57 @@ export default function PlanningPage() {
     >
       <Panel eyebrow="このページの読み方" accent={accent}>
         <p>
-          たこ打99は<strong>予選版</strong>と<strong>本戦版</strong>の2つのバージョンがある。
-          本戦に向けて<strong>ゲーム性の根幹を作り替えた</strong>ため、
-          予選版の設計をそのまま残し、その上に差分を重ねる形で記述している
-          （ドキュメント側も <code>00_本選差分/</code> として同じ方式を採っている）。
+          たこ打99には<strong>予選版</strong>と<strong>本戦版</strong>という
+          <strong>ルールの異なる2つのゲーム</strong>がある。
+          本戦に向けて勝敗の決まりかたごと作り替えたため、
+          このページは<strong>2つのゾーンに分かれている</strong>。
         </p>
-        <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>
-          <strong>コンセプト 〜 用語集の統治</strong> ＝ 予選版の設計。／
-          <a href="#honsen" className="underline" style={{ color: accent }}>
-            本戦での方針転換
-          </a>{" "}
-          以降 ＝ 本戦での差分。上書きせず残しているのは、
-          <strong>何をどう判断して変えたかが、差分そのものとして読めるようにするため</strong>。
+        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div
+            className="rounded-xl border border-dashed p-4"
+            style={{ borderColor: "var(--color-border)", background: "var(--color-base-panel)" }}
+          >
+            <div className="text-[0.65rem] font-bold tracking-widest" style={{ color: "var(--color-ink-faint)" }}>
+              予選版 / QUALIFIER
+            </div>
+            <div className="mt-1.5 text-sm font-bold" style={{ color: "var(--color-ink-dim)" }}>
+              評価と信用の2軸／2つの脱落経路
+            </div>
+            <div className="mt-1 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+              破線の沈んだパネル ＝ 予選版の話
+            </div>
+          </div>
+          <div
+            className="rounded-xl border p-4"
+            style={{ borderColor: "var(--color-border-soft)", borderLeft: `5px solid ${accent}`, background: "var(--color-base-raised)" }}
+          >
+            <div className="text-[0.65rem] font-extrabold tracking-widest" style={{ color: accent }}>
+              本戦版 / FINAL
+            </div>
+            <div className="mt-1.5 text-sm font-extrabold" style={{ color: "var(--color-ink)" }}>
+              スコア1軸／足切り1経路
+            </div>
+            <div className="mt-1 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+              色の帯がついたパネル ＝ 本戦版の話
+            </div>
+          </div>
+        </div>
+        <p className="mt-4 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          予選版を上書きせず残しているのは、
+          <strong>何をどう判断して変えたかが、差分そのものとして読めるようにするため</strong>
+          （ドキュメント側も <code>00_本選差分/</code> として同じ方式を採っている）。
+          いま遊べるのは<strong>本戦版</strong>。
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="concept">コンセプトと参照元</SectionHeading>} accent={accent}>
+      <EraZoneHeader
+        era="qual"
+        accent={accent}
+        title="ここから下は、予選で提出したバージョンの設計"
+        lead="本戦ではルールごと作り替えているため、以下は現在のゲームの説明ではない。当時どう考えていたかの記録として読んでほしい。"
+      />
+
+      <Panel era="qual" title={<SectionHeading id="concept">コンセプトと参照元</SectionHeading>} accent={accent}>
         <p>
           コアプレイは<strong>寿司打</strong>のタイピング、対戦構造は<strong>テトリス99</strong>の
           「99人・下位淘汰」を参照した。寿司打の「速く正確に打つ気持ちよさ」を、
@@ -59,7 +95,7 @@ export default function PlanningPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="coreplay">コアプレイの図解</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="coreplay">コアプレイの図解</SectionHeading>} accent={accent}>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           {[
             ["注文", "＝ 単語数", "客が並ぶと注文が入る。注文の個数はお題の単語数に対応する"],
@@ -74,7 +110,7 @@ export default function PlanningPage() {
         </div>
       </Panel>
 
-      <Panel title={<SectionHeading id="twoaxis">勝敗2軸を「混ぜない」設計</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="twoaxis">勝敗2軸を「混ぜない」設計</SectionHeading>} accent={accent}>
         <p>
           <strong>評価</strong> と <strong>信用</strong> という2つの数値を、意図的に混ぜずに独立させている。
         </p>
@@ -102,7 +138,7 @@ export default function PlanningPage() {
         </Disclosure>
       </Panel>
 
-      <Panel title={<SectionHeading id="elimination">2つの脱落経路と緊張カーブ</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="elimination">2つの脱落経路と緊張カーブ</SectionHeading>} accent={accent}>
         <ul>
           <li><strong>自滅</strong>：信用が0になる（自分の提供遅延の蓄積）</li>
           <li><strong>強制</strong>：下位淘汰(storm)による評価下位のカット</li>
@@ -121,7 +157,7 @@ export default function PlanningPage() {
         </div>
       </Panel>
 
-      <Panel title={<SectionHeading id="risk">リスクとリターンのマップ</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="risk">リスクとリターンのマップ</SectionHeading>} accent={accent}>
         <p>
           「速く打つ」か「正確に打つ」か、「行列を溜めて捌く」か「JK(<TermTag>Buzz</TermTag>)を優先して取る」か。
           プレイヤーの判断1つ1つが評価と信用のどちらに効くかを分けて設計している。
@@ -130,7 +166,7 @@ export default function PlanningPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="customers">客属性とメカニクス</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="customers">客属性とメカニクス</SectionHeading>} accent={accent}>
         <ul>
           <li><strong>Normal</strong>：標準的な注文と我慢ゲージ</li>
           <li><strong>Bonus（ヒョウ柄おばちゃん）</strong>：捌くと評価に加点</li>
@@ -147,7 +183,7 @@ export default function PlanningPage() {
         </Disclosure>
       </Panel>
 
-      <Panel title={<SectionHeading id="decisions">意思決定ログ</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="decisions">意思決定ログ</SectionHeading>} accent={accent}>
         <p className="mb-4">採用したものと、その裏で却下した案。<GitHubLink href="https://github.com/Okashimachi/Takoda99-Docs">Takoda99-Docs / 01_企画書 §12</GitHubLink> がそのまま素材になっている。</p>
         <DecisionLog
           accent={accent}
@@ -162,7 +198,7 @@ export default function PlanningPage() {
         />
       </Panel>
 
-      <Panel title={<SectionHeading id="pivot">ピボットの話：テキストロ99からの全面刷新</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="pivot">ピボットの話：テキストロ99からの全面刷新</SectionHeading>} accent={accent}>
         <p>
           正直に書く。もともとの構想は「<strong>テキストロ99</strong>」という寿司ベース・直接攻撃型のゲームだった。
           しかし開催地が大阪であることを踏まえ、「たこ焼き経営バトロワ」へと全面的に作り直した。
@@ -182,7 +218,7 @@ export default function PlanningPage() {
         </Disclosure>
       </Panel>
 
-      <Panel title={<SectionHeading id="glossary">用語集をユビキタス言語の正典にする統治</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="glossary">用語集をユビキタス言語の正典にする統治</SectionHeading>} accent={accent}>
         <p>
           「テーマが変わってもコード名は変えない、表示名だけ差し替える」という統治ルールを敷いた。
           実際、テキストロ99からたこ打99へのピボットでも、内部のコード名・型名はそのまま残し、
@@ -193,26 +229,52 @@ export default function PlanningPage() {
         </p>
       </Panel>
 
+      <EffortNote accent={accent}>
+        <p>
+          「勝敗2軸を混ぜない」判断は、実装が進んでからも何度も誘惑された。
+          評価と信用を1本化した方が調整パラメータは減るが、意味が潰れると判断し最後まで分離を貫いた。
+          テキストロ99からのピボットも、資産をゼロから作り直す痛みはあったが、
+          用語集の統治ルールのおかげで実装レイヤーの被害を最小限に抑えられた。
+        </p>
+      </EffortNote>
+
+      <EraDivider
+        accent={accent}
+        headline="「体力を見せて耐えるゲーム」から「順位を見て走るゲーム」へ"
+        before="体力で死ぬ／評価で死ぬ の2経路。評価は実力＋運（客の属性・離脱）で動く"
+        after="スコア（作ったたこ焼き数 − ミス数）の一本。20秒ごとに下位が切られる"
+        note={
+          <>
+            予選の結果を受けて、<strong>ゲーム性の根幹から作り替えた</strong>。
+            機能を足して分かりやすくするのではなく、
+            <strong>削って分かりやすくする</strong>方向に振り切っている。
+            <br className="hidden md:block" />
+            情報量を削り、初見のプレイヤーが最初の10秒で
+            「自分が今どこにいて、何をすべきか」を理解できる状態にすることが目的。
+          </>
+        }
+      />
+
+      <EraZoneHeader
+        era="final"
+        accent={accent}
+        title="ここから下が、いま遊べるバージョンの設計"
+        lead="上のゾーンで書いた「勝敗2軸を混ぜない設計」は、本戦では軸そのものを1本に減らすという逆の判断で置き換えられている。"
+      />
+
       <Panel
-        eyebrow="ここから本戦版"
+        era="final"
         title={
           <SectionHeading id="honsen">
-            <DiffBadge accent={accent} />
-            本戦での方針転換 — 「耐えるゲーム」から「走るゲーム」へ
+            <EraStamp era="final" accent={accent} />
+            何をどう作り直したか
           </SectionHeading>
         }
         accent={accent}
       >
-        <p className="text-base md:text-lg" style={{ color: "var(--color-ink)" }}>
-          <strong>「体力を見せて耐えるゲーム」から「順位を見て走るゲーム」へ。</strong>
-          情報量を削り、初見のプレイヤーが最初の10秒で「自分が今どこにいて、何をすべきか」を
-          理解できる状態にする。
-        </p>
-        <p className="mt-4">
-          予選版は<strong>勝敗2軸（評価と信用）</strong>と<strong>2つの脱落経路</strong>を持っていた。
-          本戦版はこれを<strong>スコア1本・足切り1経路</strong>に畳み直している。
-          このページの前半で書いた「2軸を混ぜない設計」は、
-          <strong>本戦では軸そのものを1本に減らすという逆の判断で置き換えられた</strong>。
+        <p>
+          予選版が持っていた<strong>勝敗2軸（評価と信用）</strong>と<strong>2つの脱落経路</strong>を、
+          本戦版では<strong>スコア1本・足切り1経路</strong>に畳み直した。変わったのは次の7点。
         </p>
         <div className="mt-5">
           <DiffTable
@@ -238,7 +300,7 @@ export default function PlanningPage() {
         </GitHubLink>
       </Panel>
 
-      <Panel title={<SectionHeading id="honsen-why">なぜ根幹から変えたか — 予選で観測された事実</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="honsen-why">なぜ根幹から変えたか — 予選で観測された事実</SectionHeading>} accent={accent}>
         <ul>
           <li>最も多かったフィードバックが <strong>「お題しか見られない」</strong></li>
           <li>
@@ -269,7 +331,7 @@ export default function PlanningPage() {
         </Disclosure>
       </Panel>
 
-      <Panel title={<SectionHeading id="honsen-choice">取り得た2案と、単純案を選んだ理由</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="honsen-choice">取り得た2案と、単純案を選んだ理由</SectionHeading>} accent={accent}>
         <DecisionLog
           accent={accent}
           items={[
@@ -299,7 +361,7 @@ export default function PlanningPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="honsen-score">スコア — 順位を決める唯一の値</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="honsen-score">スコア — 順位を決める唯一の値</SectionHeading>} accent={accent}>
         <pre className="codeblock">{`スコア = 作ったたこ焼きの数（量） − ミスの多さ（正確さ）
 
   deltaScore = W_TAKOYAKI × たこ焼きの個数 − W_MISS × その注文でのミス打鍵数
@@ -338,7 +400,7 @@ export default function PlanningPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="honsen-cull">20秒等間隔 × 6段階の足切り</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="honsen-cull">20秒等間隔 × 6段階の足切り</SectionHeading>} accent={accent}>
         <p>脱落経路を1本に畳んだ結果、脱落は<strong>時刻で決まる</strong>ようになった。</p>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[480px] border-collapse text-sm">
@@ -396,7 +458,7 @@ export default function PlanningPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="honsen-finish">決着方式 — 「最後の1人を残さない」</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="honsen-finish">決着方式 — 「最後の1人を残さない」</SectionHeading>} accent={accent}>
         <pre className="codeblock">{`【危険】 10人 → 9人淘汰 → 1人だけ生存状態のまま試合が続いている？終わっている？
 【安全】 10人 → 10人全員が同時に脱落 → 試合終了。全員がリザルトへ`}</pre>
         <p className="mt-4">
@@ -432,19 +494,11 @@ export default function PlanningPage() {
 
       <EffortNote accent={accent}>
         <p>
-          <strong>本戦：</strong>
           「勝敗2軸を混ぜない」という予選の看板設計を、自分で畳みにいく判断が一番きつかった。
           ただ予選で得た事実（正確に打ったほうが負けた／体力は見られていなかった）は、
           <strong>2軸のうち片方が運で動いていたことの証拠</strong>でもあった。
           機能を足して分かりやすくするのではなく<strong>削って分かりやすくする</strong>と決めたことで、
           サーバー・クライアント双方の実装まで一緒に軽くなった。
-        </p>
-        <p className="mt-3">
-          <strong>予選：</strong>
-          「勝敗2軸を混ぜない」判断は、実装が進んでからも何度も誘惑された。
-          評価と信用を1本化した方が調整パラメータは減るが、意味が潰れると判断し最後まで分離を貫いた。
-          テキストロ99からのピボットも、資産をゼロから作り直す痛みはあったが、
-          用語集の統治ルールのおかげで実装レイヤーの被害を最小限に抑えられた。
         </p>
       </EffortNote>
     </PageLayout>

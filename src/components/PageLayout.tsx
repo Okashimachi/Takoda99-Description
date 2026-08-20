@@ -6,6 +6,10 @@ import { NextPageNav } from "./Footer";
 export interface TocItem {
   id: string;
   label: string;
+  /** ここから新しいグループが始まることを示す見出し。 */
+  group?: string;
+  /** グループ見出しの色。省略時はセクションのアクセント。 */
+  groupColor?: string;
 }
 
 interface PageLayoutProps {
@@ -67,17 +71,29 @@ export function PageLayout({ section, title, lead, toc, children, ownerLine }: P
         <aside className="hidden lg:block">
           <nav className="sticky top-24 space-y-1 border-l pl-4" style={{ borderColor: "var(--color-border-soft)" }}>
             {toc.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className="block py-1 text-sm transition-colors"
-                style={{
-                  color: activeId === item.id ? theme.accent : "var(--color-ink-faint)",
-                  fontWeight: activeId === item.id ? 700 : 400,
-                }}
-              >
-                {item.label}
-              </a>
+              <div key={item.id}>
+                {item.group && (
+                  <div
+                    className="mt-4 mb-1.5 border-t pt-3 text-[0.65rem] font-extrabold tracking-[0.22em] first:mt-0 first:border-t-0 first:pt-0"
+                    style={{
+                      borderColor: "var(--color-border-soft)",
+                      color: item.groupColor ?? theme.accent,
+                    }}
+                  >
+                    {item.group}
+                  </div>
+                )}
+                <a
+                  href={`#${item.id}`}
+                  className="block py-1 text-sm transition-colors"
+                  style={{
+                    color: activeId === item.id ? theme.accent : "var(--color-ink-faint)",
+                    fontWeight: activeId === item.id ? 700 : 400,
+                  }}
+                >
+                  {item.label}
+                </a>
+              </div>
             ))}
           </nav>
         </aside>

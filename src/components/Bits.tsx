@@ -78,17 +78,6 @@ export function TermTag({ children }: { children: ReactNode }) {
   );
 }
 
-export function DiffBadge({ accent, children = "本戦差分" }: { accent: string; children?: ReactNode }) {
-  return (
-    <span
-      className="mr-2 inline-block translate-y-[-2px] rounded-full px-2 py-0.5 align-middle text-[0.65em] font-extrabold tracking-wider"
-      style={{ background: accent, color: "var(--color-base)" }}
-    >
-      {children}
-    </span>
-  );
-}
-
 export function DiffTable({
   accent,
   items,

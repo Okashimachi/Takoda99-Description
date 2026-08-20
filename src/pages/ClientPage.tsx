@@ -1,13 +1,14 @@
 import { PageLayout, SectionHeading } from "../components/PageLayout";
 import { Panel } from "../components/Panel";
 import { Disclosure } from "../components/Disclosure";
-import { DecisionLog, DiffBadge, DiffTable, EffortNote, GitHubLink, TermTag } from "../components/Bits";
+import { DecisionLog, DiffTable, EffortNote, GitHubLink, TermTag } from "../components/Bits";
+import { EraDivider, EraStamp, EraZoneHeader } from "../components/Era";
 import { sections } from "../lib/accentTheme";
 
 const accent = sections.client.accent;
 
 const toc = [
-  { id: "split", label: "pureC# / Unity 分割" },
+  { id: "split", label: "pureC# / Unity 分割", group: "予選版 / QUALIFIER", groupColor: "var(--color-ink-faint)" },
   { id: "mvu", label: "MVU アーキテクチャ" },
   { id: "modules", label: "モジュール構成" },
   { id: "typing", label: "打鍵判定の作り込み" },
@@ -15,7 +16,7 @@ const toc = [
   { id: "webgl", label: "WebGL制約" },
   { id: "principles", label: "絶対原則" },
   { id: "views", label: "描画モジュール" },
-  { id: "honsen", label: "★ 本戦での差分" },
+  { id: "honsen", label: "作り替えの全体像", group: "本戦版 / FINAL" },
   { id: "proto", label: "Proto v0.8.0 移行" },
   { id: "removal", label: "無効化ではなく撤去" },
   { id: "ranking", label: "ランキングUIの新設" },
@@ -47,17 +48,55 @@ export default function ClientPage() {
         <p>
           Unity WebGL / unityroom公開。クライアントは受信stateを描画するだけの薄い層に徹する。
         </p>
-        <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>
-          <strong>2領域分割 〜 描画モジュール</strong> ＝ 予選版の設計（本戦でもそのまま生きている土台）。／
-          <a href="#honsen" className="underline" style={{ color: accent }}>
-            本戦での差分
-          </a>{" "}
-          以降 ＝ 本戦に向けた作り替え。
-          <strong>アーキテクチャは1行も変えずに、ゲームの根幹の変更を吸収できた</strong>のがこのページの主題。
+        <p className="mt-3">
+          このページは<strong>2つのゾーンに分かれている</strong>。
+          本戦に向けて<a href="/planning#honsen" className="underline" style={{ color: "var(--color-planning)" }}>ゲームのルールごと作り替えた</a>ため、
+          クライアントも<strong>受信するデータの意味がまるごと入れ替わった</strong>。
+        </p>
+        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div
+            className="rounded-xl border border-dashed p-4"
+            style={{ borderColor: "var(--color-border)", background: "var(--color-base-panel)" }}
+          >
+            <div className="text-[0.65rem] font-bold tracking-widest" style={{ color: "var(--color-ink-faint)" }}>
+              予選版 / QUALIFIER
+            </div>
+            <div className="mt-1.5 text-sm font-bold" style={{ color: "var(--color-ink-dim)" }}>
+              土台の設計（本戦でもそのまま生きている）
+            </div>
+            <div className="mt-1 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+              破線の沈んだパネル
+            </div>
+          </div>
+          <div
+            className="rounded-xl border p-4"
+            style={{ borderColor: "var(--color-border-soft)", borderLeft: `5px solid ${accent}`, background: "var(--color-base-raised)" }}
+          >
+            <div className="text-[0.65rem] font-extrabold tracking-widest" style={{ color: accent }}>
+              本戦版 / FINAL
+            </div>
+            <div className="mt-1.5 text-sm font-extrabold" style={{ color: "var(--color-ink)" }}>
+              契約の破壊的変更と、UIの全面的な作り替え
+            </div>
+            <div className="mt-1 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+              色の帯がついたパネル
+            </div>
+          </div>
+        </div>
+        <p className="mt-4 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          このページの主題は、
+          <strong>その作り替えを、アーキテクチャを1行も変えずに吸収できた</strong>こと。
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="split">2領域分割：pureC# と Unity</SectionHeading>} accent={accent}>
+      <EraZoneHeader
+        era="qual"
+        accent={accent}
+        title="ここから下は、予選までに組んだ土台"
+        lead="本戦でも生きている部分。ゲームのルールが変わっても、この層は作り直していない。"
+      />
+
+      <Panel era="qual" title={<SectionHeading id="split">2領域分割：pureC# と Unity</SectionHeading>} accent={accent}>
         <ul>
           <li>判断基準は「<code>UnityEngine</code> を書かずに実装できるか」だけ</li>
           <li>pureC# は DLL としてビルドし <code>Assets/Plugins/Takoda99/</code> から参照（<code>dotnet test</code> 実行で自動コピー）</li>
@@ -66,7 +105,7 @@ export default function ClientPage() {
         </ul>
       </Panel>
 
-      <Panel title={<SectionHeading id="mvu">アーキテクチャ選定：MVU（単方向データフロー）</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="mvu">アーキテクチャ選定：MVU（単方向データフロー）</SectionHeading>} accent={accent}>
         <p>
           <code>Dispatcher → Reducer → ClientState → View</code>、打鍵は <code>TypingJudge → OrderServed</code>。
         </p>
@@ -92,7 +131,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="modules">モジュール構成（pureC#、依存順＝実装順）</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="modules">モジュール構成（pureC#、依存順＝実装順）</SectionHeading>} accent={accent}>
         <div className="space-y-2">
           {pureModules.map(([n, name, desc]) => (
             <div key={n} className="flex items-start gap-3 rounded-lg border p-3" style={{ borderColor: "var(--color-border-soft)" }}>
@@ -110,7 +149,7 @@ export default function ClientPage() {
         <GitHubLink href="https://github.com/Okashimachi/Takoda99-Unity">Takoda99-Unity</GitHubLink>
       </Panel>
 
-      <Panel title={<SectionHeading id="typing">打鍵判定の作り込み</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="typing">打鍵判定の作り込み</SectionHeading>} accent={accent}>
         <ul>
           <li>日本語ローマ字入力の複数表記を受理する前方一致オートマトン</li>
           <li>
@@ -137,7 +176,7 @@ export default function ClientPage() {
         </ul>
       </Panel>
 
-      <Panel title={<SectionHeading id="send">送信設計：注文単位での集約</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="send">送信設計：注文単位での集約</SectionHeading>} accent={accent}>
         <p>
           1文字ごとに送らない。注文単位で <code>OrderServed</code>（<code>customerId</code> / <code>elapsedMs</code> /
           <code>missCount</code> / <code>clientTimestamp</code>）に集約する。
@@ -145,7 +184,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="webgl">WebGL制約</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="webgl">WebGL制約</SectionHeading>} accent={accent}>
         <p>
           <code>System.Net.WebSockets</code> が使えないため <TermTag>NativeWebSocket</TermTag> を採用。
           自前のディスパッチループが無いため <code>Update</code> で <code>DispatchMessageQueue()</code> を呼ぶ
@@ -154,7 +193,7 @@ export default function ClientPage() {
         <p className="mt-3">最大の技術リスクをWebGL疎通確認として最優先で潰した。</p>
       </Panel>
 
-      <Panel title={<SectionHeading id="principles">絶対原則</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="principles">絶対原則</SectionHeading>} accent={accent}>
         <ul>
           <li>C#に経営ロジックを書かない（例外は打鍵判定＋その集計のみ）</li>
           <li>描画は必ず受信state経由。楽観的更新で経営数値を先取りしない</li>
@@ -180,7 +219,7 @@ export default function ClientPage() {
         </ul>
       </Panel>
 
-      <Panel title={<SectionHeading id="views">描画モジュールと値オブジェクト</SectionHeading>} accent={accent}>
+      <Panel era="qual" title={<SectionHeading id="views">描画モジュールと値オブジェクト</SectionHeading>} accent={accent}>
         <ul>
           <li><code>MainStoreView</code>：暖簾・屋台土台・お題単語・提灯・鉄板</li>
           <li><code>TakoyakiStandView</code>：24穴のスロット</li>
@@ -206,25 +245,46 @@ export default function ClientPage() {
         </p>
       </Panel>
 
+      <EffortNote accent={accent}>
+        <p>
+          促音・撥音・拗音の文脈解決は、日本語タイピングゲームの定番の落とし穴。
+          テーブル側に寄せる判断のおかげで、TypingJudge自体は非常にシンプルなまま保てた。
+          WebGLのWebSocket制約は開発初期に潰しておいたことで、後半の機能追加を疎通不安なく進められた。
+        </p>
+      </EffortNote>
+
+      <EraDivider
+        accent={accent}
+        headline="契約が破壊的に変わっても、アーキテクチャは作り直さずに済んだ"
+        before="体力・我慢ゲージ・星評価・99店ミニ盤面を描く。MatchEnd が順位と成績を運んでくる"
+        after="ランキングと足切り秒読みを描く。MatchEnd は空クラスになり、成績は脱落時に受け取って保持する"
+        note={
+          <>
+            信用（体力）制の廃止、客の離脱の廃止、評価→スコアへの置き換え、20秒ごとの段階足切り。
+            <strong>受信するデータの意味がまるごと入れ替わった</strong>のに、
+            触ったのは Action と reducer のケース、そして View だけだった。
+          </>
+        }
+      />
+
+      <EraZoneHeader
+        era="final"
+        accent={accent}
+        title="ここから下が、本戦に向けた作り替え"
+        lead="Proto v0.8.0 への移行から始まり、撤去・ランキングUIの新設・個人成績の保持まで。約2週間ぶんの差分。"
+      />
+
       <Panel
-        eyebrow="ここから本戦版"
+        era="final"
         title={
           <SectionHeading id="honsen">
-            <DiffBadge accent={accent} />
-            本戦での差分 — MVUが破壊的な契約変更を吸収した
+            <EraStamp era="final" accent={accent} />
+            作り替えの全体像
           </SectionHeading>
         }
         accent={accent}
       >
         <p>
-          本戦ではゲームの根幹が変わった（
-          <a href="/planning#honsen" className="underline" style={{ color: "var(--color-planning)" }}>
-            企画側の方針転換
-          </a>
-          ）。信用（体力）制の廃止、客の離脱の廃止、評価→スコアへの置き換え、20秒ごとの段階足切り。
-          クライアントから見ると、これは<strong>受信するデータの意味がまるごと入れ替わる</strong>変更になる。
-        </p>
-        <p className="mt-3">
           それでも <strong>MVU（<code>Dispatcher → Reducer → ClientState → View</code>）の構造は変えていない</strong>。
           変わったのは Action の顔ぶれと reducer のケース、そして View だけ。
           「書き込み口を1点に絞る」という予選の判断が、
@@ -249,7 +309,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="proto">Proto v0.8.0 移行 — <code>MatchEnd</code> が空になった</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="proto">Proto v0.8.0 移行 — <code>MatchEnd</code> が空になった</SectionHeading>} accent={accent}>
         <p>
           契約（Proto）が v0.5.0 → v0.8.0 に上がり、クライアントの本戦対応はここから始まった。
           <code>vendor/Takoda99.Proto/Messages.cs</code> は<strong>1文字も編集せず丸ごとコピーする手ミラー</strong>で、
@@ -290,7 +350,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="removal">「無効化ではなく撤去」を方針として決めた</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="removal">「無効化ではなく撤去」を方針として決めた</SectionHeading>} accent={accent}>
         <DecisionLog
           accent={accent}
           items={[
@@ -336,7 +396,7 @@ export default function ClientPage() {
         </Disclosure>
       </Panel>
 
-      <Panel title={<SectionHeading id="ranking">ランキングUIの新設 — 「上位を見せる／下位を急かす」</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="ranking">ランキングUIの新設 — 「上位を見せる／下位を急かす」</SectionHeading>} accent={accent}>
         <p>
           予選の99店ミニ盤面を置き換える、本戦UIの中核。
           仕様書8本ぶんの作り込みで、<strong>新しい通信は1つも増えていない</strong>
@@ -381,7 +441,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="personal">予選のバグを、実装ではなく設計で潰した</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="personal">予選のバグを、実装ではなく設計で潰した</SectionHeading>} accent={accent}>
         <p>予選で踏んだ、いちばん痛い不具合。</p>
         <pre className="codeblock">{`脱落モーダル →「次へ」→ 個人成績シーンへ遷移
                           ↓
@@ -417,7 +477,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="simplify">状態遷移が単純になった — 本戦最大の恩恵</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="simplify">状態遷移が単純になった — 本戦最大の恩恵</SectionHeading>} accent={accent}>
         <pre className="codeblock">{`【予選】お題を表示 → 打鍵中 → ┬ 打ち切った → OrderServed
                               └ CustomerLeft が来た → 入力中断・行列から除去・次の客へ
 
@@ -438,7 +498,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="polish">削った分を演出に回した</SectionHeading>} accent={accent}>
+      <Panel era="final" title={<SectionHeading id="polish">削った分を演出に回した</SectionHeading>} accent={accent}>
         <p>
           本戦対応は撤去が中心だったぶん、空いた時間を<strong>体験の底上げ</strong>に使えた。
         </p>
@@ -469,7 +529,6 @@ export default function ClientPage() {
 
       <EffortNote accent={accent}>
         <p>
-          <strong>本戦：</strong>
           ゲームの根幹が変わったのに、<strong>アーキテクチャの選定をやり直す必要がまったく無かった</strong>のが一番の収穫。
           MVUで書き込み口を1点に絞っていたおかげで、
           <code>MatchEnd</code> が空クラスになるという破壊的変更も
@@ -482,12 +541,6 @@ export default function ClientPage() {
           予選の個人成績のバグも、
           <strong>同じ実装をやり直すのではなく「遷移とデータ受信を切り離す」という設計変更で潰した</strong>のが、
           本戦でいちばん納得のいった判断。
-        </p>
-        <p className="mt-3">
-          <strong>予選：</strong>
-          促音・撥音・拗音の文脈解決は、日本語タイピングゲームの定番の落とし穴。
-          テーブル側に寄せる判断のおかげで、TypingJudge自体は非常にシンプルなまま保てた。
-          WebGLのWebSocket制約は開発初期に潰しておいたことで、後半の機能追加を疎通不安なく進められた。
         </p>
       </EffortNote>
     </PageLayout>
