@@ -1,7 +1,7 @@
 import { PageLayout, SectionHeading } from "../components/PageLayout";
 import { Panel } from "../components/Panel";
 import { Disclosure } from "../components/Disclosure";
-import { DecisionLog, EffortNote, GitHubLink, TermTag } from "../components/Bits";
+import { DecisionLog, DiffBadge, DiffTable, EffortNote, GitHubLink, TermTag } from "../components/Bits";
 import { sections } from "../lib/accentTheme";
 
 const accent = sections.planning.accent;
@@ -16,6 +16,12 @@ const toc = [
   { id: "decisions", label: "意思決定ログ" },
   { id: "pivot", label: "ピボットの話" },
   { id: "glossary", label: "用語集の統治" },
+  { id: "honsen", label: "★ 本戦での方針転換" },
+  { id: "honsen-why", label: "予選で観測された事実" },
+  { id: "honsen-choice", label: "複雑案と単純案" },
+  { id: "honsen-score", label: "スコアへの一本化" },
+  { id: "honsen-cull", label: "20秒ごとの足切り" },
+  { id: "honsen-finish", label: "最後の1人を残さない" },
 ];
 
 export default function PlanningPage() {
@@ -27,6 +33,23 @@ export default function PlanningPage() {
       ownerLine="担当: カシュー"
       toc={toc}
     >
+      <Panel eyebrow="このページの読み方" accent={accent}>
+        <p>
+          たこ打99は<strong>予選版</strong>と<strong>本戦版</strong>の2つのバージョンがある。
+          本戦に向けて<strong>ゲーム性の根幹を作り替えた</strong>ため、
+          予選版の設計をそのまま残し、その上に差分を重ねる形で記述している
+          （ドキュメント側も <code>00_本選差分/</code> として同じ方式を採っている）。
+        </p>
+        <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          <strong>コンセプト 〜 用語集の統治</strong> ＝ 予選版の設計。／
+          <a href="#honsen" className="underline" style={{ color: accent }}>
+            本戦での方針転換
+          </a>{" "}
+          以降 ＝ 本戦での差分。上書きせず残しているのは、
+          <strong>何をどう判断して変えたかが、差分そのものとして読めるようにするため</strong>。
+        </p>
+      </Panel>
+
       <Panel title={<SectionHeading id="concept">コンセプトと参照元</SectionHeading>} accent={accent}>
         <p>
           コアプレイは<strong>寿司打</strong>のタイピング、対戦構造は<strong>テトリス99</strong>の
@@ -170,8 +193,254 @@ export default function PlanningPage() {
         </p>
       </Panel>
 
+      <Panel
+        eyebrow="ここから本戦版"
+        title={
+          <SectionHeading id="honsen">
+            <DiffBadge accent={accent} />
+            本戦での方針転換 — 「耐えるゲーム」から「走るゲーム」へ
+          </SectionHeading>
+        }
+        accent={accent}
+      >
+        <p className="text-base md:text-lg" style={{ color: "var(--color-ink)" }}>
+          <strong>「体力を見せて耐えるゲーム」から「順位を見て走るゲーム」へ。</strong>
+          情報量を削り、初見のプレイヤーが最初の10秒で「自分が今どこにいて、何をすべきか」を
+          理解できる状態にする。
+        </p>
+        <p className="mt-4">
+          予選版は<strong>勝敗2軸（評価と信用）</strong>と<strong>2つの脱落経路</strong>を持っていた。
+          本戦版はこれを<strong>スコア1本・足切り1経路</strong>に畳み直している。
+          このページの前半で書いた「2軸を混ぜない設計」は、
+          <strong>本戦では軸そのものを1本に減らすという逆の判断で置き換えられた</strong>。
+        </p>
+        <div className="mt-5">
+          <DiffTable
+            accent={accent}
+            items={[
+              { label: "順位を決める値", before: "評価（EMAの相対パーセンタイル）", after: "スコア（累積の絶対値）" },
+              { label: "勝敗の軸", before: "評価 と 信用 の2軸", after: "スコアの1軸" },
+              { label: "脱落経路", before: "信用0の自滅 / 評価下位の淘汰", after: "20秒ごとの段階的足切りのみ" },
+              { label: "客の離脱", before: "我慢ゲージ切れで逃げる", after: "廃止。客は逃げない" },
+              { label: "客属性の効果", before: "Bonus加点 / Claimer減点 / Buzz大変動", after: "廃止。見た目が変わるだけ" },
+              { label: "決着", before: "生存1店 or 制限時間到達", after: "120秒で全店が同時に脱落" },
+              { label: "画面の向き", before: "縦画面", after: "縦画面のまま（据え置き）" },
+            ]}
+          />
+        </div>
+        <p className="mt-5 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          <strong>削るのは内部処理だけで、画面は賑やかなまま。</strong>
+          客キャラクター・属性の見た目・行列・背景は本戦でも画面に出る。
+          ゲーム上の意味を失って演出になっただけで、アート素材は1枚も無駄になっていない。
+        </p>
+        <GitHubLink href="https://github.com/Okashimachi/Takoda99-Docs">
+          Takoda99-Docs / 00_本選差分
+        </GitHubLink>
+      </Panel>
+
+      <Panel title={<SectionHeading id="honsen-why">なぜ根幹から変えたか — 予選で観測された事実</SectionHeading>} accent={accent}>
+        <ul>
+          <li>最も多かったフィードバックが <strong>「お題しか見られない」</strong></li>
+          <li>
+            大阪会場の実戦で、<strong>より正確でクリア数も多くミスも少なかった側が負けた</strong>。
+            運として説明はつくが、納得感のある敗北になっていない
+          </li>
+          <li>98人分の体力を配信・表示していたが、<strong>実際には見られていなかった</strong>（提灯・店の見た目も同様）</li>
+          <li>評価と体力の連動が弱く、<strong>順位1位なのに体力切れで脱落</strong>する事象が発生した</li>
+        </ul>
+        <p className="mt-4">因果構造は1本に繋がっていた。</p>
+        <pre className="codeblock">{`お題しか見られない
+  → 速さと正確さのトレードオフが認識されない
+  → 「いつリスクを取るか」というタイミング軸が存在しないものとして扱われる
+  → 正確に打つこと自体の意味が消える
+  → 「お題どおり打ったのになぜ負けた？」`}</pre>
+        <p className="mt-4">
+          <strong>根本原因は1つ：見てほしい情報が視界に入っていない。</strong>
+        </p>
+        <Disclosure summary="「運が絡んでいた」ことの正体" accent={accent}>
+          <p>
+            予選で評価を動かしていた4要素のうち、<strong>2つが運だった</strong>
+            （どの客が来たか＝属性の加減点／行列がどう詰まったか＝客の離脱）。
+            しかもどちらも「画面を見ていないと気づけない」情報で、
+            <strong>「お題しか見られない」という同じ問題の別の顔</strong>でしかなかった。
+            本戦では視線誘導で見せにいくのではなく、
+            <strong>評価を動かす要因のほうを実力だけに減らした</strong>。
+          </p>
+        </Disclosure>
+      </Panel>
+
+      <Panel title={<SectionHeading id="honsen-choice">取り得た2案と、単純案を選んだ理由</SectionHeading>} accent={accent}>
+        <DecisionLog
+          accent={accent}
+          items={[
+            {
+              adopted: "単純案 — 見られていない情報を捨て、残す情報を極限まで絞る",
+              rejected: "複雑案 — 視線誘導・周辺アニメ・考える時間で、周辺情報を自然に見せる",
+            },
+          ]}
+        />
+        <p className="mt-4">
+          複雑案が恩恵を与えるのは「このゲームに慣れた、少し上手い層」だが、
+          <strong>ハッカソンは本作を初めて発表する場であり、全員が初心者になる</strong>。
+          プレイ回数は1〜2回。遊び込むほど味が出る設計は、そもそも味が出るところまで到達しない。
+          <strong>初回のプレイで最大火力が出る設計</strong>に切り替えた。
+        </p>
+        <Disclosure summary="判断の補強：下に合わせて作れば、上級者は勝手に遊びを見つける" accent={accent}>
+          <p>
+            新しいゲームを始めたとき、人は最初は単純なことしかできない。
+            スプラトゥーンの初回は「床を塗る・撃つ・潜る」しかできず、
+            スペシャル・ギアパワー・マップ・イカランプは見えていない。
+            <strong>下に合わせて作れば上級者は勝手に遊びを見つける（RTA・縛り・ノーミス狙い）が、逆は成立しない。</strong>
+          </p>
+        </Disclosure>
+        <p className="mt-4 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          副次的に、<strong>情報量が減ることでアートの自由度が上がった</strong>
+          （ダイナミックなUIは情報量削減が前提）。実装も「機能を消す・表示しない」変更が中心になり、軽い。
+        </p>
+      </Panel>
+
+      <Panel title={<SectionHeading id="honsen-score">スコア — 順位を決める唯一の値</SectionHeading>} accent={accent}>
+        <pre className="codeblock">{`スコア = 作ったたこ焼きの数（量） − ミスの多さ（正確さ）
+
+  deltaScore = W_TAKOYAKI × たこ焼きの個数 − W_MISS × その注文でのミス打鍵数
+  score      = Σ deltaScore`}</pre>
+        <div className="mt-4">
+          <DiffTable
+            accent={accent}
+            items={[
+              { label: "性質", before: "相対値（生存店内のパーセンタイル）", after: "絶対値。積み上がる" },
+              { label: "中身", before: "直近パフォーマンスの移動平均（EMA）", after: "試合開始からの累計" },
+              { label: "動き", before: "上がったり下がったりする", after: "打てば増える。ミスすると増えにくい" },
+              {
+                label: "プレイヤーから見て",
+                before: "「なぜ上がった／下がった？」が分かりにくい",
+                after: "「打った数だけ増える」で説明が終わる",
+              },
+            ]}
+          />
+        </div>
+        <p className="mt-5">
+          <strong>速さは「個数」に自然に含まれる。</strong>
+          速く打てる人ほど時間内に多くのたこ焼きを作れるため、速度を別の項として持つ必要がない。
+          「速さと正確性」という2軸が、そのまま2つの項になった。
+        </p>
+        <p className="mt-3">
+          <code>W_TAKOYAKI</code>（仮 100）と <code>W_MISS</code>（仮 30）の
+          <strong>比率こそが本作の面白さの中心</strong>。
+          <code>W_MISS</code> が小さければミスを恐れず速く打つゲームに、大きければ慎重に正確に打つゲームになる。
+          <strong>釣り合っているとき、どちらを取るかの判断が発生する＝狙っている状態</strong>。
+          この2値は <code>GameParameters</code> 経由のサーバー設定値にしてあり、
+          <strong>ビルドなしで当日まで調整できる</strong>。
+        </p>
+        <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          画面上の主役は引き続き<strong>順位</strong>で、スコアは補助表示。
+          ただし<strong>リザルトでは具体的な数字が達成感になる</strong>ため、そこでは大きく出す。
+        </p>
+      </Panel>
+
+      <Panel title={<SectionHeading id="honsen-cull">20秒等間隔 × 6段階の足切り</SectionHeading>} accent={accent}>
+        <p>脱落経路を1本に畳んだ結果、脱落は<strong>時刻で決まる</strong>ようになった。</p>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[480px] border-collapse text-sm">
+            <thead>
+              <tr>
+                {["時刻", "生存数", "切る数", "切る割合", "意味"].map((h) => (
+                  <th key={h} className="px-3 py-2 text-left text-xs font-bold" style={{ color: "var(--color-ink-faint)" }}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["20秒", "99 → 75", "24", "24%", "初回。全員が最低20秒は遊べる"],
+                ["40秒", "75 → 55", "20", "27%", "ルールを理解した頃"],
+                ["60秒", "55 → 35", "20", "36%", "中盤。淘汰が本格化"],
+                ["80秒", "35 → 20", "15", "43%", "終盤の入口"],
+                ["100秒", "20 → 10", "10", "50%", "決勝進出ライン"],
+                ["120秒", "10 → 0", "10", "100%", "試合終了。全店が同時に閉店"],
+              ].map((r) => (
+                <tr key={r[0]} className="border-t" style={{ borderColor: "var(--color-border-soft)" }}>
+                  <td className="px-3 py-2 font-bold" style={{ color: accent }}>{r[0]}</td>
+                  <td className="px-3 py-2 font-mono text-xs" style={{ color: "var(--color-ink)" }}>{r[1]}</td>
+                  <td className="px-3 py-2" style={{ color: "var(--color-ink-dim)" }}>{r[2]}</td>
+                  <td className="px-3 py-2" style={{ color: "var(--color-ink-dim)" }}>{r[3]}</td>
+                  <td className="px-3 py-2 text-xs" style={{ color: "var(--color-ink-dim)" }}>{r[4]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-5">
+          切る割合は <code>24% → 27% → 36% → 43% → 50% → 100%</code> と単調に増加する。
+          これは単なる緩和ではなく、<strong>理解度と淘汰の強さを一致させる設計</strong>。
+          <strong>厳しい淘汰が来る頃には、プレイヤーは既にルールを理解している。</strong>
+          予選の理不尽さは「分からないうちに落とされた」ことに由来しており、これはその逆をやっている。
+        </p>
+        <Disclosure summary="なぜ20秒“等間隔”なのか（不均等でもよかった）" accent={accent}>
+          <ul>
+            <li><strong>プレイヤー</strong>：一度覚えれば以降は説明不要。秒読みが常に0〜20秒に収まり、数字の意味が直感的になる</li>
+            <li><strong>観客・LT</strong>：「20秒ごとに人が減る」リズムが外から見て分かる。プレゼン中に「今20人減りました」と言える</li>
+            <li><strong>実装</strong>：<code>atMs</code> が20000の倍数で揃う。デバッグ時に事故が起きにくい</li>
+            <li>
+              <strong>調整</strong>：間隔を触らず <code>targetAliveCount</code> だけで淘汰カーブを動かせる。
+              <strong>調整変数が1本に減り、シミュレーションの試行が速く回る</strong>
+            </li>
+          </ul>
+        </Disclosure>
+        <p className="mt-4 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          満たすべき条件は「決着は開始2分ちょうど（LTの尺）」「最後は10人で約20秒戦う」
+          「どれだけ弱い人でも20秒は遊べる（予選の“10秒で終わる”体験を潰す）」
+          「初回に50%を一気に切らない」の4つ。時刻はすべて固定し、
+          動かすのは中間ステージの <code>targetAliveCount</code> だけと決めている。
+        </p>
+      </Panel>
+
+      <Panel title={<SectionHeading id="honsen-finish">決着方式 — 「最後の1人を残さない」</SectionHeading>} accent={accent}>
+        <pre className="codeblock">{`【危険】 10人 → 9人淘汰 → 1人だけ生存状態のまま試合が続いている？終わっている？
+【安全】 10人 → 10人全員が同時に脱落 → 試合終了。全員がリザルトへ`}</pre>
+        <p className="mt-4">
+          120秒の最終ステージでは<strong>残り10店を全員同時に脱落させる</strong>。1店だけ勝ち残らせない。
+          「9人を落として1人を残す」形にすると<strong>残った1人だけが試合に取り残される</strong>状態が生まれ、
+          予選までの開発でも実際にこの不具合が出ていた。
+          全員が同じタイミングで同じ状態に入れば、
+          <strong>「勝者だけ別の状態にいる」という特殊ケースが構造ごと消える</strong>。
+        </p>
+        <p className="mt-3">
+          もちろん<strong>プレイヤーの体験としては勝者が生まれる</strong>。
+          差はクライアントの演出でつけ、1位／2〜3位／4〜10位／11位以下の4段階に分岐させる。
+          <strong>処理はシンプルに、演出は豪華に。</strong>
+          サーバーは「120秒で全員脱落・順位はスコア順」だけを持ち、
+          盛り上がりの担保はクライアントの責務にした（
+          <a href="/client" className="underline" style={{ color: "var(--color-client)" }}>
+            クライアントサイド
+          </a>
+          ）。
+        </p>
+        <Disclosure summary="意図した副産物：決勝の10人＝上位10名リストと完全に一致する" accent={accent}>
+          <pre className="codeblock">{`100秒時点で、上位10名リストが、そのまま生存者全員になる
+  → 決勝では「リストに映っている全員が敵」という状態が生まれる
+  → 誰が上で誰が下かが一目で分かり、逆転もリアルタイムで見える
+  → 観戦している脱落者にも、何が起きているかが完全に伝わる`}</pre>
+          <p className="mt-3">
+            上位リストの表示件数を10に決めたことと、決勝の生存数を10に決めたことが噛み合い、
+            <strong>試合が進むほどUIが情報を出し切った状態に収束する</strong>。
+            LTで最も見せたい20秒が、最も分かりやすい画面になる。
+          </p>
+        </Disclosure>
+      </Panel>
+
       <EffortNote accent={accent}>
         <p>
+          <strong>本戦：</strong>
+          「勝敗2軸を混ぜない」という予選の看板設計を、自分で畳みにいく判断が一番きつかった。
+          ただ予選で得た事実（正確に打ったほうが負けた／体力は見られていなかった）は、
+          <strong>2軸のうち片方が運で動いていたことの証拠</strong>でもあった。
+          機能を足して分かりやすくするのではなく<strong>削って分かりやすくする</strong>と決めたことで、
+          サーバー・クライアント双方の実装まで一緒に軽くなった。
+        </p>
+        <p className="mt-3">
+          <strong>予選：</strong>
           「勝敗2軸を混ぜない」判断は、実装が進んでからも何度も誘惑された。
           評価と信用を1本化した方が調整パラメータは減るが、意味が潰れると判断し最後まで分離を貫いた。
           テキストロ99からのピボットも、資産をゼロから作り直す痛みはあったが、

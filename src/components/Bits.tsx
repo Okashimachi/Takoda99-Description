@@ -78,6 +78,62 @@ export function TermTag({ children }: { children: ReactNode }) {
   );
 }
 
+export function DiffBadge({ accent, children = "本戦差分" }: { accent: string; children?: ReactNode }) {
+  return (
+    <span
+      className="mr-2 inline-block translate-y-[-2px] rounded-full px-2 py-0.5 align-middle text-[0.65em] font-extrabold tracking-wider"
+      style={{ background: accent, color: "var(--color-base)" }}
+    >
+      {children}
+    </span>
+  );
+}
+
+export function DiffTable({
+  accent,
+  items,
+  headings = ["予選版", "本戦版"],
+}: {
+  accent: string;
+  items: { label: string; before: ReactNode; after: ReactNode }[];
+  headings?: [string, string];
+}) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[520px] border-collapse text-sm">
+        <thead>
+          <tr>
+            <th className="w-[26%] px-3 py-2 text-left text-xs font-bold" style={{ color: "var(--color-ink-faint)" }}>
+              項目
+            </th>
+            <th className="px-3 py-2 text-left text-xs font-bold" style={{ color: "var(--color-ink-faint)" }}>
+              {headings[0]}
+            </th>
+            <th className="px-3 py-2 text-left text-xs font-bold" style={{ color: accent }}>
+              {headings[1]}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((it) => (
+            <tr key={it.label} className="border-t align-top" style={{ borderColor: "var(--color-border-soft)" }}>
+              <td className="px-3 py-2.5 font-bold" style={{ color: "var(--color-ink)" }}>
+                {it.label}
+              </td>
+              <td className="px-3 py-2.5 line-through decoration-1" style={{ color: "var(--color-ink-faint)" }}>
+                {it.before}
+              </td>
+              <td className="px-3 py-2.5 font-semibold" style={{ color: "var(--color-ink)" }}>
+                {it.after}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export function StatGrid({ items }: { items: { label: string; value: string }[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
