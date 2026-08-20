@@ -1,5 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { navOrder, sections } from "../lib/accentTheme";
+import { images } from "../assets/images";
+import { Img } from "./Img";
 
 export function Header() {
   return (
@@ -9,6 +11,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6">
         <NavLink to="/" className="flex items-center gap-2 shrink-0">
+          <Img src={images.logo.full} alt="" className="h-8 w-8 rounded-md object-contain" />
           <span className="text-lg font-extrabold tracking-tight" style={{ color: "var(--color-ink)" }}>
             たこ打99
           </span>

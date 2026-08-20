@@ -4,7 +4,6 @@ import { navOrder, sections } from "../lib/accentTheme";
 import { ArchDiagram } from "../components/ArchDiagram";
 import { StatGrid } from "../components/Bits";
 import { Disclosure } from "../components/Disclosure";
-import { Img } from "../components/Img";
 import { EraDivider } from "../components/Era";
 
 const rules = [
@@ -50,11 +49,85 @@ const stack = [
   "Supabase (Postgres)", "GCP Compute Engine", "Caddy",
 ];
 
+const teamGithub = "https://github.com/Okashimachi";
+
 const team = [
-  { name: "カシュー", role: "企画/仕様・開発手法・クライアント (Unity / pureC#) ・本サイト", icon: images.team.cashew as string | null, accent: "var(--color-planning)" },
-  { name: "りーせ", role: "サーバー (Go)", icon: images.team.rise as string | null, accent: "var(--color-server)" },
-  { name: "たまちゃ", role: "アート", icon: images.team.tamatya as string | null, accent: "var(--color-art)" },
+  {
+    name: "カシュー",
+    role: "企画/仕様・開発手法・クライアント (Unity / pureC#) ・本サイト",
+    icon: images.team.cashew,
+    accent: "var(--color-planning)",
+    github: "https://github.com/kdix-23-240",
+    x: "https://x.com/game_game_nuts",
+  },
+  {
+    name: "りーせ",
+    role: "サーバー (Go)",
+    icon: images.team.rise,
+    accent: "var(--color-server)",
+    github: "https://github.com/ru-se",
+    x: "https://x.com/ri_se_yu",
+  },
+  {
+    name: "たまちゃ",
+    role: "アート",
+    icon: images.team.tamatya,
+    accent: "var(--color-art)",
+    github: "https://github.com/tamtya",
+    x: "https://x.com/tamtya_joho",
+  },
 ];
+
+function GithubIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden className="h-4 w-4" fill="currentColor">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+    </svg>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className="h-4 w-4" fill="currentColor">
+      <path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.97 6.82H1.66l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z" />
+    </svg>
+  );
+}
+
+function SocialLinks({ github, x, accent, label }: { github: string; x?: string; accent: string; label: string }) {
+  const base =
+    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition-colors hover:text-white";
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-2">
+      <a
+        href={github}
+        target="_blank"
+        rel="noreferrer noopener"
+        className={base}
+        style={{ borderColor: accent, color: accent }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = accent)}
+        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+        aria-label={`${label} の GitHub`}
+      >
+        <GithubIcon /> GitHub
+      </a>
+      {x && (
+        <a
+          href={x}
+          target="_blank"
+          rel="noreferrer noopener"
+          className={base}
+          style={{ borderColor: accent, color: accent }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = accent)}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+          aria-label={`${label} の X`}
+        >
+          <XIcon /> X
+        </a>
+      )}
+    </div>
+  );
+}
 
 export default function TopPage() {
   return (
@@ -64,16 +137,20 @@ export default function TopPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `linear-gradient(180deg, rgba(251,249,244,0.75), rgba(251,249,244,0.97)), url(${images.screens.title})`,
+            backgroundImage: `linear-gradient(180deg, rgba(251,249,244,0.75), rgba(251,249,244,0.97)), url(${images.screens.matchMain})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
         <div className="relative mx-auto max-w-[1200px] px-6 py-24 text-center md:py-36">
-          <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl" style={{ color: "var(--color-ink)" }}>
-            たこ打99
-          </h1>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
+          <img
+            src={images.logo.full}
+            alt="たこ打99"
+            className="mx-auto mb-6 h-24 rounded-2xl object-contain shadow-lg md:h-32"
+          />
+          {/* ロゴ画像にタイトルが入っているため、見出しは読み上げ/SEO用に隠している */}
+          <h1 className="sr-only">たこ打99</h1>
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
             <span
               className="rounded-full px-3 py-1 tracking-widest text-white"
               style={{ background: "var(--color-top)" }}
@@ -219,6 +296,29 @@ export default function TopPage() {
           </div>
         </section>
 
+        {/* ゲーム画面 */}
+        <section>
+          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
+            ゲーム画面
+          </h2>
+          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2">
+            {[
+              { src: images.screens.matchMain, caption: "マッチ画面（自店の屋台と注文）" },
+              { src: images.screens.matchIngame, caption: "対戦中の盤面（99店のスキャン）" },
+            ].map((s) => (
+              <figure key={s.src}>
+                <div
+                  className="overflow-hidden rounded-2xl border"
+                  style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-panel)" }}
+                >
+                  <img src={s.src} alt={s.caption} className="w-full object-contain" />
+                </div>
+                <figcaption className="mt-2 text-xs" style={{ color: "var(--color-ink-faint)" }}>{s.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
         {/* 数字で見る */}
         <section>
           <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
@@ -346,10 +446,21 @@ export default function TopPage() {
 
         {/* チーム紹介 */}
         <section>
-          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-            チーム「おかしまち」
-          </h2>
+          <div className="flex items-center gap-3">
+            <img
+              src={images.team.okashimachi}
+              alt="おかしまち"
+              className="h-12 w-12 rounded-xl object-contain"
+              style={{ background: "var(--color-base-panel)" }}
+            />
+            <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
+              チーム「おかしまち」
+            </h2>
+          </div>
           <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>3人でこれを作りました。</p>
+          <div className="mt-4">
+            <SocialLinks github={teamGithub} accent="var(--color-top)" label="チームおかしまち" />
+          </div>
           <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
             {team.map((m) => (
               <div
@@ -357,21 +468,17 @@ export default function TopPage() {
                 className="rounded-2xl border p-6 text-center"
                 style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-raised)" }}
               >
-                <Img
+                <img
                   src={m.icon}
                   alt={m.name}
                   className="mx-auto h-20 w-20 rounded-full border-2 object-cover"
-                  placeholder={
-                    <div
-                      className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 text-2xl font-extrabold"
-                      style={{ borderColor: m.accent, background: "var(--color-base-panel)", color: m.accent }}
-                    >
-                      {m.name.slice(0, 1)}
-                    </div>
-                  }
+                  style={{ borderColor: m.accent, background: "var(--color-base-panel)" }}
                 />
                 <div className="mt-4 text-lg font-extrabold" style={{ color: "var(--color-ink)" }}>{m.name}</div>
                 <div className="mt-1.5 text-xs leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>{m.role}</div>
+                <div className="mt-4">
+                  <SocialLinks github={m.github} x={m.x} accent={m.accent} label={m.name} />
+                </div>
               </div>
             ))}
           </div>

@@ -51,13 +51,26 @@ Unity のテクスチャは 2000px 超・1枚あたり数MBあるため、Web向
 
 **差し替えるときも同じ加工をかけること。** 元のPNGをそのまま置くとページが数MB単位で重くなる。
 
+## 2つの取り込み経路が混在している
+
+- **`.png` / `.jpg`** — 先に main へ入っていたぶん（ロゴ・実機スクショ・キャラ・チーム写真・favicon）
+- **`.webp`** — 後から Unity の Assets/Images から取り込み、縮小・WebP化したぶん
+
+**同じ絵が両方に無いように整理してある。** 重複していた
+`characters/*` `art/stand` `art/takoyaki` `art/takoyaki-burnt` `art/lantern` `screens/match-main`
+は先に入っていた `.png` 側を残した。
+
+> ⚠ `.png` 側は Unity のテクスチャがほぼ素のまま入っており、
+> `team/Okashimachi.png` が 7.9MB、`screens/match-ingame.png` が 3.4MB、
+> `favicon.png` と `logo/takoda99-logo.png` が各 2.1MB ある。
+> **合計で20MB近くあり、実運用ではページが重い。** 上記の加工（縮小・WebP化）を
+> こちらにも掛ければ 1〜2MB に落とせる。
+
 ## まだ無い素材
 
 `images.ts` で `null` にしているもの。用意できたら public/ に置いてパスを書き戻す。
 
-- `logo/*` — ロゴ単体の書き出しが無い（タイトル画面の絵に含まれている）
-- `screens/match-ingame`, `screens/eliminated`, `screens/debug-panel` — **実機プレイのスクリーンショット**
-- `team/*` — メンバーのアイコン（今は頭文字のプレースホルダを出している）
+- `screens/eliminated`, `screens/debug-panel` — 脱落モーダル・デバッグパネルのキャプチャ
 - `dev/*` — `.sdd` 索引・リポジトリツリー・config画面などのキャプチャ
 - `art/rough`, `art/ui-mock` — ラフ・UIモック
-- `favicon`, `ogp`
+- `ogp`
