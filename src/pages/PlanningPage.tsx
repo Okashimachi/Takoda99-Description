@@ -387,13 +387,31 @@ export default function PlanningPage() {
           「速さと正確性」という2軸が、そのまま2つの項になった。
         </p>
         <p className="mt-3">
-          <code>W_TAKOYAKI</code>（仮 100）と <code>W_MISS</code>（仮 30）の
+          <code>W_TAKOYAKI</code> と <code>W_MISS</code> の
           <strong>比率こそが本作の面白さの中心</strong>。
           <code>W_MISS</code> が小さければミスを恐れず速く打つゲームに、大きければ慎重に正確に打つゲームになる。
           <strong>釣り合っているとき、どちらを取るかの判断が発生する＝狙っている状態</strong>。
           この2値は <code>GameParameters</code> 経由のサーバー設定値にしてあり、
           <strong>ビルドなしで当日まで調整できる</strong>。
         </p>
+        <Disclosure summary="比率をどう決めたか（企画では決めきらず、シミュレーションに預けた）" accent={accent}>
+          <p>
+            基準は<strong>「速さ型と正確型の平均順位が拮抗する点」</strong>。
+            どちらかの型が明確に有利なら、それは「どちらを取るかの判断」が消えている状態なので、
+            <strong>2つの型を戦わせて平均順位が並ぶ重みを探す</strong>という形に落とした。
+          </p>
+          <p className="mt-3">
+            現在の値は <code>100 : 28</code>。ただし
+            <strong>拮抗点はゲーム側を触るたびに動く</strong>のが実際で、
+            お題の長さや注文数の配分を変えるたびに測り直している
+            （注文数を 2 / 4 / 8個 にした際は1客あたりの加点が増え、ミスの罰が相対的に軽くなったぶん拮抗点が上がった）。
+          </p>
+          <p className="mt-3">
+            <strong>企画書の時点では「仮の値」としか書いていない。</strong>
+            構造（何と何の比率で決まるか）を先に確定させ、
+            <strong>数値はシミュレーションと実プレイに預ける</strong>という分け方をしている。
+          </p>
+        </Disclosure>
         <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>
           画面上の主役は引き続き<strong>順位</strong>で、スコアは補助表示。
           ただし<strong>リザルトでは具体的な数字が達成感になる</strong>ため、そこでは大きく出す。

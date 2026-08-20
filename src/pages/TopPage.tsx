@@ -3,12 +3,45 @@ import { images } from "../assets/images";
 import { navOrder, sections } from "../lib/accentTheme";
 import { ArchDiagram } from "../components/ArchDiagram";
 import { StatGrid } from "../components/Bits";
+import { Disclosure } from "../components/Disclosure";
+import { EraDivider } from "../components/Era";
 
 const rules = [
+  { n: "①", title: "客が注文", desc: "注文の個数 ＝ お題の単語数。1人あたり 2 / 4 / 8 個" },
+  { n: "②", title: "速く正確にタイプ", desc: "打鍵の速さがそのまま作れた個数になる" },
+  { n: "③", title: "スコアが積み上がる", desc: "スコア ＝ 作ったたこ焼きの数 − ミスの数。それだけ" },
+  { n: "④", title: "20秒ごとに足切り", desc: "スコア下位から脱落。120秒で決着し、1位がチャンピオン" },
+];
+
+const qualRules = [
   { n: "①", title: "客が注文", desc: "注文の個数 ＝ お題の単語数" },
   { n: "②", title: "速く正確にタイプ", desc: "打鍵の速度とミス数が評価に直結する" },
   { n: "③", title: "提供 → 評価↑", desc: "提供が遅れると客が離脱して信用が減る" },
   { n: "④", title: "下位は強制脱落", desc: "評価下位は定期的に淘汰。最後の1店が優勝" },
+];
+
+const rebuildLinks = [
+  {
+    to: "/planning#honsen",
+    accent: "var(--color-planning)",
+    label: "企画",
+    title: "なぜ根幹から変えたか",
+    desc: "視線誘導で見せる案を却下し、見られていない情報を捨てる案を採った理由。20秒等間隔×6段階の足切りと、最後の1人を残さない決着。",
+  },
+  {
+    to: "/client#honsen",
+    accent: "var(--color-client)",
+    label: "クライアント",
+    title: "契約の破壊的変更を吸収する",
+    desc: "MatchEnd が空クラスになってもアーキテクチャは作り直さずに済んだ話。撤去・ランキングUIの新設・予選のバグを設計で潰した話。",
+  },
+  {
+    to: "/server",
+    accent: "var(--color-server)",
+    label: "サーバー",
+    title: "スコアの重みを実測で決める",
+    desc: "「速さ型と正確型の平均順位が拮抗する点」を基準に、シミュレーションを回して重みを詰めた話。",
+  },
 ];
 
 const stack = [
@@ -45,6 +78,17 @@ export default function TopPage() {
           <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl" style={{ color: "var(--color-ink)" }}>
             たこ打99
           </h1>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
+            <span
+              className="rounded-full px-3 py-1 tracking-widest text-white"
+              style={{ background: "var(--color-top)" }}
+            >
+              本戦版 / FINAL
+            </span>
+            <span style={{ color: "var(--color-ink-faint)" }}>
+              予選のフィードバックを受けて、ゲーム性の根幹から作り替えました
+            </span>
+          </div>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed md:text-xl" style={{ color: "var(--color-ink-dim)" }}>
             寿司打のタイピングを、大阪のたこ焼き激戦区での
             <br className="hidden md:block" />
@@ -67,6 +111,13 @@ export default function TopPage() {
             >
               作り方を見る
             </NavLink>
+            <a
+              href="#rebuild"
+              className="rounded-full border px-6 py-3 text-sm font-bold transition-colors"
+              style={{ borderColor: "var(--color-border)", color: "var(--color-ink)" }}
+            >
+              予選 → 本戦の差分
+            </a>
           </div>
         </div>
       </section>
@@ -77,6 +128,10 @@ export default function TopPage() {
           <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
             30秒でわかるルール
           </h2>
+          <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+            <strong style={{ color: "var(--color-ink)" }}>速く正確に打った順に生き残る。</strong>
+            体力もなく、客の当たり外れもなく、運で決まる要素はひとつもない。
+          </p>
           <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-4">
             {rules.map((r) => (
               <div
@@ -90,6 +145,83 @@ export default function TopPage() {
               </div>
             ))}
           </div>
+
+          <div className="mt-6">
+            <Disclosure summary="予選版のルールはこうだった（本戦で廃止した2つの数値）" accent="var(--color-top)">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+                {qualRules.map((r) => (
+                  <div
+                    key={r.n}
+                    className="rounded-xl border border-dashed p-4"
+                    style={{ borderColor: "var(--color-border)", background: "var(--color-base-panel)" }}
+                  >
+                    <div className="text-lg font-extrabold" style={{ color: "var(--color-ink-faint)" }}>{r.n}</div>
+                    <div className="mt-1 text-sm font-bold" style={{ color: "var(--color-ink-dim)" }}>{r.title}</div>
+                    <div className="mt-1 text-xs leading-relaxed" style={{ color: "var(--color-ink-faint)" }}>{r.desc}</div>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-sm">
+                予選版は<strong>評価</strong>（相対ランキング）と<strong>信用</strong>（体力）の2つの数値で勝敗が決まり、
+                客の属性や離脱といった<strong>運の要素が評価を動かしていた</strong>。
+                本戦ではその2つとも廃止して、スコア1本に畳んでいる。
+              </p>
+            </Disclosure>
+          </div>
+        </section>
+
+        {/* 予選 → 本戦 */}
+        <section id="rebuild" className="scroll-mt-24">
+          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
+            予選 → 本戦：根幹から作り替えました
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>
+            予選で最も多かったフィードバックは
+            <strong style={{ color: "var(--color-ink)" }}>「お題しか見られない」</strong>。
+            大阪会場の実戦では、
+            <strong style={{ color: "var(--color-ink)" }}>より正確でクリア数も多くミスも少なかった側が負けた</strong>。
+            運として説明はつくが、納得感のある敗北になっていない。
+            本戦ではここを起点に、<strong style={{ color: "var(--color-ink)" }}>勝敗の決まりかたごと作り替えた</strong>。
+          </p>
+
+          <div className="mt-8">
+            <EraDivider
+              accent="var(--color-top)"
+              headline="「体力を見せて耐えるゲーム」から「順位を見て走るゲーム」へ"
+              before="体力で死ぬ／評価で死ぬ の2経路。評価は実力＋運（客の属性・離脱）で動く"
+              after="スコア（作ったたこ焼き数 − ミス数）の一本。20秒ごとに下位が切られる"
+              note={
+                <>
+                  機能を足して分かりやすくするのではなく、<strong>削って分かりやすくする</strong>方向に振り切った。
+                  結果として、サーバー・クライアント双方の実装まで一緒に軽くなっている。
+                </>
+              }
+            />
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {rebuildLinks.map((c) => (
+              <NavLink
+                key={c.to}
+                to={c.to}
+                className="group flex flex-col rounded-2xl border p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+                style={{
+                  borderColor: "var(--color-border-soft)",
+                  borderLeft: `5px solid ${c.accent}`,
+                  background: "var(--color-base-raised)",
+                }}
+              >
+                <div className="text-[0.65rem] font-extrabold tracking-widest" style={{ color: c.accent }}>
+                  {c.label}の本戦差分へ
+                </div>
+                <div className="mt-2 font-extrabold" style={{ color: "var(--color-ink)" }}>{c.title}</div>
+                <div className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>{c.desc}</div>
+                <div className="mt-4 text-sm font-bold transition-transform group-hover:translate-x-1" style={{ color: c.accent }}>
+                  読む →
+                </div>
+              </NavLink>
+            ))}
+          </div>
         </section>
 
         {/* 数字で見る */}
@@ -101,16 +233,24 @@ export default function TopPage() {
             <StatGrid
               items={[
                 { label: "同時対戦店舗数", value: "99店" },
-                { label: "客の総数", value: "300人固定" },
-                { label: "1試合の目安", value: "約2分" },
-                { label: "リポジトリ数", value: "5本" },
+                { label: "試合時間（固定）", value: "120秒" },
+                { label: "足切りの段階", value: "20秒ごと×6" },
+                { label: "決勝に残る店", value: "10店" },
+                { label: "スコアの重み", value: "100 : 28" },
                 { label: "ゲームロジックの所在", value: "サーバー権威" },
                 { label: "技術構成", value: "Go + Unity WebGL" },
-                { label: "開発メンバー", value: "3人" },
-                { label: "公開範囲", value: "全リポジトリ Public" },
+                { label: "リポジトリ / メンバー", value: "5本 / 3人" },
               ]}
             />
           </div>
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>
+            <strong style={{ color: "var(--color-ink)" }}>スコアの重み 100 : 28</strong>
+            は「たこ焼き1個あたりの加点 : ミス1打鍵あたりの減点」。
+            <strong style={{ color: "var(--color-ink)" }}>速さ型と正確型の平均順位が拮抗する点</strong>
+            をシミュレーションで探して決めた値で、当日は設定から変更できる（ビルド不要）。
+            人間が99人に満たない場合はBotで補完し、
+            <strong style={{ color: "var(--color-ink)" }}>常に99店</strong>で試合を行う。
+          </p>
         </section>
 
         {/* 技術スタック */}
