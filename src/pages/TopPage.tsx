@@ -4,6 +4,7 @@ import { navOrder, sections } from "../lib/accentTheme";
 import { ArchDiagram } from "../components/ArchDiagram";
 import { StatGrid } from "../components/Bits";
 import { Disclosure } from "../components/Disclosure";
+import { Img } from "../components/Img";
 import { EraDivider } from "../components/Era";
 
 const rules = [
@@ -50,9 +51,9 @@ const stack = [
 ];
 
 const team = [
-  { name: "カシュー", role: "企画/仕様・開発手法・クライアント (Unity / pureC#) ・本サイト", icon: images.team.cashew, accent: "var(--color-planning)" },
-  { name: "りーせ", role: "サーバー (Go)", icon: images.team.rise, accent: "var(--color-server)" },
-  { name: "たまちゃ", role: "アート", icon: images.team.tamatya, accent: "var(--color-art)" },
+  { name: "カシュー", role: "企画/仕様・開発手法・クライアント (Unity / pureC#) ・本サイト", icon: images.team.cashew as string | null, accent: "var(--color-planning)" },
+  { name: "りーせ", role: "サーバー (Go)", icon: images.team.rise as string | null, accent: "var(--color-server)" },
+  { name: "たまちゃ", role: "アート", icon: images.team.tamatya as string | null, accent: "var(--color-art)" },
 ];
 
 export default function TopPage() {
@@ -63,18 +64,12 @@ export default function TopPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `linear-gradient(180deg, rgba(251,249,244,0.75), rgba(251,249,244,0.97)), url(${images.screens.matchMain})`,
+            backgroundImage: `linear-gradient(180deg, rgba(251,249,244,0.75), rgba(251,249,244,0.97)), url(${images.screens.title})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         />
         <div className="relative mx-auto max-w-[1200px] px-6 py-24 text-center md:py-36">
-          <img
-            src={images.logo.title}
-            alt="たこ打99"
-            className="mx-auto mb-6 h-16 object-contain md:h-24"
-            onError={(e) => (e.currentTarget.style.display = "none")}
-          />
           <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl" style={{ color: "var(--color-ink)" }}>
             たこ打99
           </h1>
@@ -362,12 +357,18 @@ export default function TopPage() {
                 className="rounded-2xl border p-6 text-center"
                 style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-raised)" }}
               >
-                <img
+                <Img
                   src={m.icon}
                   alt={m.name}
                   className="mx-auto h-20 w-20 rounded-full border-2 object-cover"
-                  style={{ borderColor: m.accent, background: "var(--color-base-panel)" }}
-                  onError={(e) => (e.currentTarget.style.visibility = "hidden")}
+                  placeholder={
+                    <div
+                      className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 text-2xl font-extrabold"
+                      style={{ borderColor: m.accent, background: "var(--color-base-panel)", color: m.accent }}
+                    >
+                      {m.name.slice(0, 1)}
+                    </div>
+                  }
                 />
                 <div className="mt-4 text-lg font-extrabold" style={{ color: "var(--color-ink)" }}>{m.name}</div>
                 <div className="mt-1.5 text-xs leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>{m.role}</div>

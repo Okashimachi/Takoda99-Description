@@ -77,10 +77,12 @@ export default function ProcessPage() {
           <li><code>spec:</code> コミットと <code>feat:</code> コミットを分け、仕様のdiffが読める形にする</li>
           <li>各 .cs の先頭に対応仕様書のパスをコメントで書く</li>
         </ul>
-        <div className="mt-4 rounded-xl border p-3" style={{ borderColor: "var(--color-border-soft)" }}>
-          <img src={images.dev.sddIndex} alt=".sdd 索引" className="w-full rounded-lg" onError={(e) => (e.currentTarget.style.display = "none")} />
-          <p className="mt-2 text-xs" style={{ color: "var(--color-ink-faint)" }}>.sdd 索引（依存順・✅列）</p>
-        </div>
+        {images.dev.sddIndex && (
+          <div className="mt-4 rounded-xl border p-3" style={{ borderColor: "var(--color-border-soft)" }}>
+            <img src={images.dev.sddIndex} alt=".sdd 索引" className="w-full rounded-lg" />
+            <p className="mt-2 text-xs" style={{ color: "var(--color-ink-faint)" }}>.sdd 索引（依存順・✅列）</p>
+          </div>
+        )}
       </Panel>
 
       <Panel title={<SectionHeading id="ai">AI駆動開発の実践</SectionHeading>} accent={accent}>

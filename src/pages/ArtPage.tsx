@@ -17,12 +17,12 @@ const toc = [
   { id: "flow", label: "制作フロー" },
 ];
 
+// 属性との対応は CustomerSpriteLibrary.asset の割り当てに準拠。
 const chars = [
-  ["customer-normal", "通常客", images.characters.normal],
-  ["customer-bonus", "ヒョウ柄おばちゃん", images.characters.bonus],
-  ["customer-claimer", "クレーマー", images.characters.claimer],
-  ["customer-buzz", "JK", images.characters.buzz],
-  ["customer-comedian", "お笑い芸人", images.characters.comedian],
+  ["Normal", "通常客", images.characters.normal],
+  ["Bonus", "お笑い芸人", images.characters.comedian],
+  ["Claimer", "ヒョウ柄おばちゃん", images.characters.obachan],
+  ["Buzz", "JK", images.characters.jk],
 ];
 
 const mapping = [
@@ -90,10 +90,10 @@ export default function ArtPage() {
       <Panel title={<SectionHeading id="stand">屋台の画面要素</SectionHeading>} accent={accent}>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {[
-            ["暖簾", images.art.stand],
-            ["鉄板", images.art.stand],
-            ["たこ焼き（24穴・注文進捗 x/N）", images.art.takoyaki],
-            ["提灯（信用ライフの表現）", images.art.lantern],
+            ["暖簾", images.art.noren],
+            ["屋台の土台", images.art.stand],
+            ["鉄板", images.art.griddle],
+            ["たこ焼き", images.art.takoyaki],
           ].map(([label, src]) => (
             <div key={label} className="text-center">
               <div
