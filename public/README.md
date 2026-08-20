@@ -44,27 +44,29 @@
 > 実際の割り当て（Bonus=お笑い芸人 / Claimer=おばちゃん）と食い違っている。
 > **サイトは実際に画面に出るほう（SOの割り当て）に合わせている。**
 
-## 加工
+## 加工（差し替えるときも必ず同じ手順で）
 
-Unity のテクスチャは 2000px 超・1枚あたり数MBあるため、Web向けに縮小・WebP化している
-（最大辺：`screens` 1600px / `art` 800px / `characters` 700px、quality 85）。合計 18MB → 約1.1MB。
+元画像は Unity のテクスチャや2048px級の写真で、1枚あたり数MBある。
+**そのまま置くと1ページで20MB近くになる**ため、用途ごとに最大辺を決めて縮小し WebP 化している。
 
-**差し替えるときも同じ加工をかけること。** 元のPNGをそのまま置くとページが数MB単位で重くなる。
+| 置き場所 | 最大辺 | 形式 |
+| --- | --- | --- |
+| `screens/` | 1600px | WebP q85 |
+| `art/` | 800px | WebP q85 |
+| `characters/` | 700px | WebP q85 |
+| `team/` | 320px | WebP q85（80x80表示のため） |
+| `logo/` | 512px | WebP q88 |
 
-## 2つの取り込み経路が混在している
+透過が実質使われていないものは RGB に落としてから変換する。
 
-- **`.png` / `.jpg`** — 先に main へ入っていたぶん（ロゴ・実機スクショ・キャラ・チーム写真・favicon）
-- **`.webp`** — 後から Unity の Assets/Images から取り込み、縮小・WebP化したぶん
+**PNG / JPEG のまま残しているのは2つだけ。**
 
-**同じ絵が両方に無いように整理してある。** 重複していた
-`characters/*` `art/stand` `art/takoyaki` `art/takoyaki-burnt` `art/lantern` `screens/match-main`
-は先に入っていた `.png` 側を残した。
+| ファイル | 理由 |
+| --- | --- |
+| `favicon.png`（180px） | `index.html` が `type="image/png"` で参照している |
+| `ogp.jpg`（1200x630） | OGP画像。クローラのWebP対応が読めないためJPEGで用意する |
 
-> ⚠ `.png` 側は Unity のテクスチャがほぼ素のまま入っており、
-> `team/Okashimachi.png` が 7.9MB、`screens/match-ingame.png` が 3.4MB、
-> `favicon.png` と `logo/takoda99-logo.png` が各 2.1MB ある。
-> **合計で20MB近くあり、実運用ではページが重い。** 上記の加工（縮小・WebP化）を
-> こちらにも掛ければ 1〜2MB に落とせる。
+合計 約20MB → 約1.9MB。
 
 ## まだ無い素材
 

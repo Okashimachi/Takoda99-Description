@@ -5,12 +5,12 @@
 // null は「まだ素材が無い」を表す。描画側（Img コンポーネント）は null なら要素ごと出さない。
 export const images = {
   logo: {
-    full: "/logo/takoda99-logo.png",
+    full: "/logo/takoda99-logo.webp",
   },
   screens: {
     title: "/screens/title.webp",
-    matchMain: "/screens/match-main.png",
-    matchIngame: "/screens/match-ingame.png",
+    matchMain: "/screens/match-main.webp",
+    matchIngame: "/screens/match-ingame.webp",
     matchmaking: "/screens/matchmaking.webp",
     result: "/screens/result.webp",
     eliminated: null,
@@ -19,16 +19,16 @@ export const images = {
   // 属性との対応は CustomerSpriteLibrary.asset の割り当てに準拠。
   // Normal=通常客 / Bonus=お笑い芸人 / Claimer=ヒョウ柄おばちゃん / Buzz=JK。
   characters: {
-    normal: "/characters/customer-normal.png",
-    claimer: "/characters/customer-claimer.png",
-    buzz: "/characters/customer-buzz.png",
-    comedian: "/characters/customer-comedian.png",
+    normal: "/characters/customer-normal.webp",
+    claimer: "/characters/customer-claimer.webp",
+    buzz: "/characters/customer-buzz.webp",
+    comedian: "/characters/customer-comedian.webp",
   },
   art: {
-    stand: "/art/stand.png",
-    takoyaki: "/art/takoyaki.png",
-    takoyakiBurnt: "/art/takoyaki-burnt.png",
-    lantern: "/art/lantern.png",
+    stand: "/art/stand.webp",
+    takoyaki: "/art/takoyaki.webp",
+    takoyakiBurnt: "/art/takoyaki-burnt.webp",
+    lantern: "/art/lantern.webp",
     // 以下は Takoda99-Unity の Assets/Images から追加で取り込んだもの
     background: "/art/background.webp",
     noren: "/art/noren.webp",
@@ -59,11 +59,11 @@ export const images = {
     gcpConsole: null,
   },
   team: {
-    okashimachi: "/team/Okashimachi.png",
-    cashew: "/team/Cashew.jpg",
-    rise: "/team/ri-se.jpg",
-    tamatya: "/team/tamatya.jpg",
+    okashimachi: "/team/Okashimachi.webp",
+    cashew: "/team/Cashew.webp",
+    rise: "/team/ri-se.webp",
+    tamatya: "/team/tamatya.webp",
   },
   favicon: "/favicon.png",
-  ogp: null,
+  ogp: "/ogp.jpg",
 };
