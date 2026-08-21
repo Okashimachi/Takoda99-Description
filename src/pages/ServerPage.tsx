@@ -9,6 +9,43 @@ import { BandwidthDiagram, SpectatorDiagram } from "../components/ServerDiagrams
 
 const accent = sections.server.accent;
 
+/**
+ * 「見出し + 説明」の箇条書き。
+ *
+ * 素の <ul><li><strong>ラベル</strong>：本文…</li></ul> だと、
+ * ラベルの太字と本文中の太字が同じ見た目になり、行間も詰まっているため
+ * どこが要点か分からなくなる。ラベルを独立した行に出し、本文からは
+ * 強調を外して、強弱を1段だけにしている。
+ *
+ * このページでしか使わないのでローカルに置く（共有部品は触らない）。
+ */
+function PointList({ items }: { items: { label: string; body: string }[] }) {
+  return (
+    // 余白はインラインで指定する。共有CSSの .prose-body li に margin-bottom が
+    // 入っており、Tailwind の space-y-* がそれに負けて 5.6px まで詰まるため。
+    // 共有CSS側は他ページも使うので触らない。
+    <ul className="mt-4 list-none pl-0">
+      {items.map((it, i) => (
+        <li
+          key={it.label}
+          className="pl-4"
+          style={{
+            borderLeft: `2px solid ${accent}`,
+            marginBottom: i === items.length - 1 ? 0 : "1.5rem",
+          }}
+        >
+          <div className="text-[0.95rem] font-bold leading-snug" style={{ color: "var(--color-ink)" }}>
+            {it.label}
+          </div>
+          <p className="mt-1.5 text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>
+            {it.body}
+          </p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 const toc = [
   { id: "authority", label: "サーバー権威", group: "予選版 / QUALIFIER", groupColor: "var(--color-ink-faint)" },
   { id: "layers", label: "層アーキテクチャ" },
@@ -58,17 +95,22 @@ export default function ServerPage() {
           不正対策であると同時に、<strong>99人の画面が食い違わないための設計</strong>でもあります。「自分だけ順位が違う」が起きると、対戦ゲームとして成立しません。
         </p>
         <Disclosure summary="申告を信用しないと、具体的に何を防げるのか" accent={accent}>
-          <ul>
-            <li>
-              <strong>順番の飛ばし読み</strong>：行列の先頭以外の客を「打ち終わった」と報告されても弾きます。サーバーが行列の実体を持っているので、そもそも整合しません。
-            </li>
-            <li>
-              <strong>あり得ない速さの申告</strong>：1語あたりの所要時間に下限を設け、下回る報告は下限に丸めます。順位計算には使いませんが、あとで分析するときに数字が汚れるのを防ぎます。
-            </li>
-            <li>
-              <strong>ミス数の水増し・過少申告</strong>：打鍵数はサーバーが配ったお題から分かるので、報告がそれを超えていれば切り詰めます。
-            </li>
-          </ul>
+          <PointList
+            items={[
+              {
+                label: "順番の飛ばし読み",
+                body: "行列の先頭以外の客を「打ち終わった」と報告されても弾きます。サーバーが行列の実体を持っているので、そもそも整合しません。",
+              },
+              {
+                label: "あり得ない速さの申告",
+                body: "1語あたりの所要時間に下限を設け、下回る報告は下限に丸めます。順位計算には使いませんが、あとで分析するときに数字が汚れるのを防ぎます。",
+              },
+              {
+                label: "ミス数の水増し・過少申告",
+                body: "打鍵数はサーバーが配ったお題から分かるので、報告がそれを超えていれば切り詰めます。",
+              },
+            ]}
+          />
         </Disclosure>
       </Panel>
 
@@ -77,14 +119,18 @@ export default function ServerPage() {
         <div className="mt-4 rounded-xl border p-4" style={{ borderColor: "var(--color-border-soft)" }}>
           <LayerDiagram />
         </div>
-        <ul className="mt-4">
-          <li>
-            <strong>コアから通信・時計・I/Oを追い出した</strong>：試合の中核は「経過時間を渡すと状態が進むだけ」の純粋な計算にしてあります。
-          </li>
-          <li>
-            <strong>ルールで機械的に守る</strong>：コアが余計なものを取り込んでいないかをCIが自動で弾きます。人の注意力に頼りません。
-          </li>
-        </ul>
+        <PointList
+          items={[
+            {
+              label: "コアから通信・時計・I/Oを追い出した",
+              body: "試合の中核は「経過時間を渡すと状態が進むだけ」の純粋な計算にしてあります。",
+            },
+            {
+              label: "ルールで機械的に守る",
+              body: "コアが余計なものを取り込んでいないかをCIが自動で弾きます。人の注意力に頼りません。",
+            },
+          ]}
+        />
         <p className="mt-4">
           地味な分離ですが、<strong>本戦でいちばん効いたのはここ</strong>でした。通信を介さずに試合をまるごと回せるので、あとで触れるシミュレータが成立します。
         </p>
@@ -231,14 +277,18 @@ export default function ServerPage() {
           本戦では<strong>値の性質ごとに配る間隔を分けました</strong>。順位表はゆっくりで足り、自分の点数だけは手応えに直結するので短い間隔で届けます。結果として<strong>71MB</strong>まで下がりました。
         </p>
         <Disclosure summary="間隔を分けるときに踏んだ落とし穴" accent={accent}>
-          <ul>
-            <li>
-              <strong>区切りの瞬間だけは間引かない</strong>：順位が大きく入れ替わった直後を落とすと、次の配信まで古い並びが残ります。脱落が発生した回はまとめて全部通しています。
-            </li>
-            <li>
-              <strong>提供直後の返事は間引かない</strong>：クライアントは「報告したのに返事が来ない＝弾かれた」で不正申告を検知しています。ここを間引くと判別できなくなります。
-            </li>
-          </ul>
+          <PointList
+            items={[
+              {
+                label: "区切りの瞬間だけは間引かない",
+                body: "順位が大きく入れ替わった直後を落とすと、次の配信まで古い並びが残ります。脱落が発生した回はまとめて全部通しています。",
+              },
+              {
+                label: "提供直後の返事は間引かない",
+                body: "クライアントは「報告したのに返事が来ない＝弾かれた」で不正申告を検知しています。ここを間引くと判別できなくなります。",
+              },
+            ]}
+          />
           <p className="mt-4">
             どちらも「一律に間引く」だと壊れる場所です。<strong>間引いていいものと、絶対に落としてはいけないものを分けて考える</strong>必要がありました。
           </p>
@@ -253,17 +303,22 @@ export default function ServerPage() {
           予選のBotは全員が同じ強さでした。全員が同じ平均に寄るので順位表が毎回シャッフルされ、<strong>人間だけが外れ値</strong>になります。本戦では強さを3階層に分け、さらに<strong>1体ごとの個性を固定</strong>しました。「あの店ずっと速いな」が成立します。
         </p>
         <Disclosure summary="人らしく見せるために効いた3つのこと" accent={accent}>
-          <ul>
-            <li>
-              <strong>個性と揺らぎを分けた</strong>：以前は「毎回ぶれる」だけで個体差がなく、全員が平均に回帰していました。生まれたときに決まる個性と、打つたびの揺らぎを別々に持たせています。
-            </li>
-            <li>
-              <strong>速さと正確さを連動させた</strong>：別々に決めると「超速いのにミスだらけ」「遅いのに完璧」という<strong>実際にはいない人</strong>が生まれます。上手い人ほど速くて正確、という関係を持たせました。
-            </li>
-            <li>
-              <strong>難しくなると崩れるようにした</strong>：以前は難易度が上がっても同じ調子で打ち続けるので、終盤ほどBotが人間より有利でした。上手いBotほど崩れにくい、という差もつけています。
-            </li>
-          </ul>
+          <PointList
+            items={[
+              {
+                label: "個性と揺らぎを分けた",
+                body: "以前は「毎回ぶれる」だけで個体差がなく、全員が平均に回帰していました。生まれたときに決まる個性と、打つたびの揺らぎを別々に持たせています。",
+              },
+              {
+                label: "速さと正確さを連動させた",
+                body: "別々に決めると「超速いのにミスだらけ」「遅いのに完璧」という、実際にはいない人が生まれます。上手い人ほど速くて正確、という関係を持たせました。",
+              },
+              {
+                label: "難しくなると崩れるようにした",
+                body: "以前は難易度が上がっても同じ調子で打ち続けるので、終盤ほどBotが人間より有利でした。上手いBotほど崩れにくい、という差もつけています。",
+              },
+            ]}
+          />
           <p className="mt-4">
             調整の目安は<strong>「標準的な速さの人が、ちょうど真ん中あたりに来るか」</strong>に置きました。途中で「打つのが遅い人が必ず最下位になる」状態になっていることに気づき、Botの幅が人の幅より狭かったのが原因だったので、いちばん弱い層を広げて直しています。
           </p>
@@ -291,14 +346,18 @@ export default function ServerPage() {
         <p>
           本番で入れ替えると<strong>進行中の試合が消えます</strong>。当日は「触らずに直せる」ことが最優先でした。
         </p>
-        <ul className="mt-3">
-          <li>
-            <strong>設定は管理画面から</strong>：難易度の上がり方、点の重み、Botの強さ、注文の量まで、ゲームの数字はすべて外に出してあります。保存すれば次の試合から反映されます。
-          </li>
-          <li>
-            <strong>状況を見るための画面</strong>：99店の状況、脱落しそうな店、難易度が狙いどおり上がっているかを1画面で見られるようにしました。<strong>見えないものは調整できない</strong>ので、調整のたびに手を入れています。
-          </li>
-        </ul>
+        <PointList
+          items={[
+            {
+              label: "設定は管理画面から",
+              body: "難易度の上がり方、点の重み、Botの強さ、注文の量まで、ゲームの数字はすべて外に出してあります。保存すれば次の試合から反映されます。",
+            },
+            {
+              label: "状況を見るための画面",
+              body: "99店の状況、脱落しそうな店、難易度が狙いどおり上がっているかを1画面で見られるようにしました。見えないものは調整できないので、調整のたびに手を入れています。",
+            },
+          ]}
+        />
         <Disclosure summary="運用まわりでいちばん怖かった事故" accent={accent}>
           <p>
             <strong>設定が本番に届いていないのに、届いたつもりで進めていたこと</strong>が何度かありました。
