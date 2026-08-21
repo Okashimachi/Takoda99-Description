@@ -2,9 +2,10 @@ import { NavLink } from "react-router-dom";
 import { images } from "../assets/images";
 import { navOrder, sections } from "../lib/accentTheme";
 import { ArchDiagram } from "../components/ArchDiagram";
-import { StatGrid } from "../components/Bits";
+
 import { Disclosure } from "../components/Disclosure";
 import { EraDivider } from "../components/Era";
+
 
 const rules = [
   { n: "①", title: "客が注文", desc: "注文の個数 ＝ お題の単語数。1人あたり 2 / 4 / 8 個" },
@@ -129,6 +130,66 @@ function SocialLinks({ github, x, accent, label }: { github: string; x?: string;
   );
 }
 
+/**
+ * トップの1セクション。
+ *
+ * 同じ幅・同じ余白のブロックが続くと、どこで話が変わったのか分からなくなる。
+ * 通し番号・見出し・地の色（tone）の3つで区切りを作る。
+ */
+function TopSection({
+  n,
+  id,
+  title,
+  lead,
+  tone = "plain",
+  accent = "var(--color-top)",
+  children,
+}: {
+  n: string;
+  id?: string;
+  title: string;
+  lead?: React.ReactNode;
+  tone?: "plain" | "band" | "dark";
+  accent?: string;
+  children: React.ReactNode;
+}) {
+  const bg =
+    tone === "dark" ? "#1c1610" : tone === "band" ? "var(--color-base-panel)" : "transparent";
+  const titleColor = tone === "dark" ? "#fff" : "var(--color-ink)";
+  const leadColor = tone === "dark" ? "rgba(251,249,244,0.72)" : "var(--color-ink-dim)";
+  return (
+    <section
+      id={id}
+      className="scroll-mt-24 border-t"
+      style={{ background: bg, borderColor: tone === "dark" ? "transparent" : "var(--color-border-soft)" }}
+    >
+      <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
+        <div className="flex items-baseline gap-3">
+          <span
+            className="font-mono text-xs font-bold tracking-[0.2em]"
+            style={{ color: accent, opacity: 0.8 }}
+          >
+            {n}
+          </span>
+          <span className="h-px flex-1" style={{ background: `color-mix(in srgb, ${accent} 30%, transparent)` }} />
+        </div>
+        <h2
+          className="mt-3 text-2xl font-black tracking-tight md:text-4xl"
+          style={{ color: titleColor }}
+        >
+          {title}
+        </h2>
+        {lead && (
+          <p className="mt-4 max-w-2xl text-base leading-relaxed" style={{ color: leadColor }}>
+            {lead}
+          </p>
+        )}
+        <div className="mt-10">{children}</div>
+      </div>
+    </section>
+  );
+}
+
 export default function TopPage() {
   return (
     <div>
@@ -194,17 +255,17 @@ export default function TopPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1200px] space-y-20 px-6 py-16 md:py-20">
-        {/* 30秒でわかるルール */}
-        <section>
-          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-            30秒でわかるルール
-          </h2>
-          <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+      <TopSection
+        n="01"
+        title="30秒でわかるルール"
+        lead={
+          <>
             <strong style={{ color: "var(--color-ink)" }}>速く正確に打った順に生き残る。</strong>
             体力もなく、客の当たり外れもなく、運で決まる要素はひとつもない。
-          </p>
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-4">
+          </>
+        }
+      >
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             {rules.map((r) => (
               <div
                 key={r.n}
@@ -240,23 +301,24 @@ export default function TopPage() {
               </p>
             </Disclosure>
           </div>
-        </section>
+      </TopSection>
 
-        {/* 予選 → 本戦 */}
-        <section id="rebuild" className="scroll-mt-24">
-          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-            予選 → 本戦：根幹から作り替えました
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>
+      <TopSection
+        n="02"
+        id="rebuild"
+        tone="band"
+        title="予選 → 本戦：根幹から作り替えました"
+        lead={
+          <>
             予選で最も多かったフィードバックは
             <strong style={{ color: "var(--color-ink)" }}>「お題しか見られない」</strong>。
             大阪会場の実戦では、
             <strong style={{ color: "var(--color-ink)" }}>より正確でクリア数も多くミスも少なかった側が負けた</strong>。
             運として説明はつくが、納得感のある敗北になっていない。
-            本戦ではここを起点に、<strong style={{ color: "var(--color-ink)" }}>勝敗の決まりかたごと作り替えた</strong>。
-          </p>
-
-          <div className="mt-8">
+          </>
+        }
+      >
+          <div>
             <EraDivider
               accent="var(--color-top)"
               headline="「体力を見せて耐えるゲーム」から「順位を見て走るゲーム」へ"
@@ -294,14 +356,10 @@ export default function TopPage() {
               </NavLink>
             ))}
           </div>
-        </section>
+      </TopSection>
 
-        {/* ゲーム画面 */}
-        <section>
-          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-            ゲーム画面
-          </h2>
-          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2">
+      <TopSection n="03" title="ゲーム画面">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             {[
               { src: images.screens.matchMain, caption: "マッチ画面（自店の屋台と注文）" },
               { src: images.screens.matchIngame, caption: "対戦中の盤面（99店のスキャン）" },
@@ -317,43 +375,52 @@ export default function TopPage() {
               </figure>
             ))}
           </div>
-        </section>
+      </TopSection>
 
-        {/* 数字で見る */}
-        <section>
-          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-            数字で見る、たこ打99
-          </h2>
-          <div className="mt-8">
-            <StatGrid
-              items={[
-                { label: "同時対戦店舗数", value: "99店" },
-                { label: "試合時間（固定）", value: "120秒" },
-                { label: "足切りの段階", value: "20秒ごと×6" },
-                { label: "決勝に残る店", value: "10店" },
-                { label: "スコアの重み", value: "100 : 28" },
-                { label: "ゲームロジックの所在", value: "サーバー権威" },
-                { label: "技術構成", value: "Go + Unity WebGL" },
-                { label: "リポジトリ / メンバー", value: "5本 / 3人" },
-              ]}
-            />
+      <TopSection n="04" tone="dark" title="数字で見る、たこ打99">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
+            {[
+              ["99", "店", "同時対戦"],
+              ["120", "秒", "試合時間（固定）"],
+              ["6", "回", "20秒ごとの足切り"],
+              ["10", "店", "決勝に残る数"],
+              ["100:28", "", "スコアの重み"],
+              ["5", "本", "リポジトリ"],
+              ["3", "人", "開発メンバー"],
+              ["2", "言語", "Go + C#"],
+            ].map(([v, u, l]) => (
+              <div key={l}>
+                <div className="flex items-baseline gap-1">
+                  <span
+                    className="text-4xl font-black leading-none tracking-tight md:text-5xl"
+                    style={{ color: "var(--color-top)" }}
+                  >
+                    {v}
+                  </span>
+                  {u && (
+                    <span className="text-sm font-bold" style={{ color: "var(--color-top)" }}>
+                      {u}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-2 text-sm font-bold" style={{ color: "rgba(251,249,244,0.85)" }}>
+                  {l}
+                </div>
+              </div>
+            ))}
           </div>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>
-            <strong style={{ color: "var(--color-ink)" }}>スコアの重み 100 : 28</strong>
+          <p className="mt-10 max-w-2xl text-sm leading-relaxed" style={{ color: "rgba(251,249,244,0.7)" }}>
+            <strong style={{ color: "#fff" }}>スコアの重み 100 : 28</strong>
             は「たこ焼き1個あたりの加点 : ミス1打鍵あたりの減点」。
-            <strong style={{ color: "var(--color-ink)" }}>速さ型と正確型の平均順位が拮抗する点</strong>
+            <strong style={{ color: "#fff" }}>速さ型と正確型の平均順位が拮抗する点</strong>
             をシミュレーションで探して決めた値で、当日は設定から変更できる（ビルド不要）。
             人間が99人に満たない場合はBotで補完し、
-            <strong style={{ color: "var(--color-ink)" }}>常に99店</strong>で試合を行う。
+            <strong style={{ color: "#fff" }}>常に99店</strong>で試合を行う。
           </p>
-        </section>
+      </TopSection>
 
-        {/* 技術スタック */}
-        <section>
-          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-            技術スタック
-          </h2>
-          <div className="mt-6 flex flex-wrap gap-2.5">
+      <TopSection n="05" title="技術スタック">
+          <div className="flex flex-wrap gap-2.5">
             {stack.map((s) => (
               <span
                 key={s}
@@ -364,37 +431,32 @@ export default function TopPage() {
               </span>
             ))}
           </div>
-        </section>
+      </TopSection>
 
-        {/* アーキテクチャ全体図 */}
-        <section>
-          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-            アーキテクチャ全体図
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm" style={{ color: "var(--color-ink-dim)" }}>
+      <TopSection
+        n="06"
+        tone="band"
+        title="アーキテクチャ全体図"
+        lead={
+          <>
             Proto を唯一の結合点として、クライアントとサーバーが独立に開発できる形にしている。詳細は
             <NavLink to="/process" className="mx-1 underline" style={{ color: "var(--color-process)" }}>開発手法</NavLink>
             と
             <NavLink to="/server" className="mx-1 underline" style={{ color: "var(--color-server)" }}>サーバー</NavLink>
             のページへ。
-          </p>
+          </>
+        }
+      >
           <div
-            className="mt-8 rounded-2xl border p-6"
+            className="rounded-2xl border p-6"
             style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-raised)" }}
           >
             <ArchDiagram />
           </div>
-        </section>
+      </TopSection>
 
-        {/* 5領域カード */}
-        <section>
-          <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-            5つの領域を掘る
-          </h2>
-          <p className="mt-2 text-sm" style={{ color: "var(--color-ink-dim)" }}>
-            3分で概要、掘れば30分。気になるところから読んでください。
-          </p>
-          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <TopSection n="07" title="5つの領域を掘る" lead="3分で概要、掘れば30分。気になるところから読んでください。">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {navOrder.map((key, i) => {
               const s = sections[key];
               const highlight: Record<string, string> = {
@@ -442,23 +504,10 @@ export default function TopPage() {
               );
             })}
           </div>
-        </section>
+      </TopSection>
 
-        {/* チーム紹介 */}
-        <section>
-          <div className="flex items-center gap-3">
-            <img
-              src={images.team.okashimachi}
-              alt="おかしまち"
-              className="h-12 w-12 rounded-xl object-contain"
-              style={{ background: "var(--color-base-panel)" }}
-            />
-            <h2 className="text-2xl font-extrabold md:text-3xl" style={{ color: "var(--color-ink)" }}>
-              チーム「おかしまち」
-            </h2>
-          </div>
-          <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>3人でこれを作りました。</p>
-          <div className="mt-4">
+      <TopSection n="08" tone="band" title="チーム「おかしまち」" lead="3人でこれを作りました。">
+          <div className="-mt-4">
             <SocialLinks github={teamGithub} accent="var(--color-top)" label="チームおかしまち" />
           </div>
           <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
@@ -482,8 +531,7 @@ export default function TopPage() {
               </div>
             ))}
           </div>
-        </section>
-      </div>
+      </TopSection>
     </div>
   );
 }

@@ -3,6 +3,8 @@ import { Panel } from "../components/Panel";
 import { Disclosure } from "../components/Disclosure";
 import { DecisionLog, DiffTable, EffortNote, GitHubLink, TermTag } from "../components/Bits";
 import { EraDivider, EraStamp, EraZoneHeader } from "../components/Era";
+import { PullQuote, StatRow } from "../components/Display";
+import { images } from "../assets/images";
 import { sections } from "../lib/accentTheme";
 
 const accent = sections.planning.accent;
@@ -32,9 +34,10 @@ export default function PlanningPage() {
       title="企画/仕様"
       lead="なぜこのゲームなのか。何を採用し、何を却下したか。意思決定の見せ場です。"
       ownerLine="担当: カシュー"
+      heroImage={images.screens.title}
       toc={toc}
     >
-      <Panel eyebrow="このページの読み方" accent={accent}>
+      <Panel tone="flat" eyebrow="このページの読み方" accent={accent}>
         <p>
           たこ打99には<strong>予選版</strong>と<strong>本戦版</strong>という
           <strong>ルールの異なる2つのゲーム</strong>がある。
@@ -157,7 +160,7 @@ export default function PlanningPage() {
         </div>
       </Panel>
 
-      <Panel era="qual" title={<SectionHeading id="risk">リスクとリターンのマップ</SectionHeading>} accent={accent}>
+      <Panel era="qual" tone="flat" title={<SectionHeading id="risk">リスクとリターンのマップ</SectionHeading>} accent={accent}>
         <p>
           「速く打つ」か「正確に打つ」か、「行列を溜めて捌く」か「JK(<TermTag>Buzz</TermTag>)を優先して取る」か。
           プレイヤーの判断1つ1つが評価と信用のどちらに効くかを分けて設計している。
@@ -218,7 +221,7 @@ export default function PlanningPage() {
         </Disclosure>
       </Panel>
 
-      <Panel era="qual" title={<SectionHeading id="glossary">用語集をユビキタス言語の正典にする統治</SectionHeading>} accent={accent}>
+      <Panel era="qual" tone="flat" title={<SectionHeading id="glossary">用語集をユビキタス言語の正典にする統治</SectionHeading>} accent={accent}>
         <p>
           「テーマが変わってもコード名は変えない、表示名だけ差し替える」という統治ルールを敷いた。
           実際、テキストロ99からたこ打99へのピボットでも、内部のコード名・型名はそのまま残し、
@@ -310,6 +313,17 @@ export default function PlanningPage() {
           <li>98人分の体力を配信・表示していたが、<strong>実際には見られていなかった</strong>（提灯・店の見た目も同様）</li>
           <li>評価と体力の連動が弱く、<strong>順位1位なのに体力切れで脱落</strong>する事象が発生した</li>
         </ul>
+        <div className="my-7">
+          <StatRow
+            accent={accent}
+            items={[
+              { value: "1", unit: "位", label: "なのに脱落", note: "評価と体力の連動が弱く、順位1位でも体力切れで落ちた", muted: true },
+              { value: "98", unit: "人分", label: "配信していた体力", note: "実際にはほとんど見られていなかった", muted: true },
+              { value: "3", unit: "分", label: "予選のプレゼン枠", note: "1位が決まらないまま残り20〜30人で時間切れ", muted: true },
+              { value: "10", unit: "秒", label: "弱い人の体験時間", note: "本戦では最低20秒に引き上げた", muted: true },
+            ]}
+          />
+        </div>
         <p className="mt-4">因果構造は1本に繋がっていた。</p>
         <pre className="codeblock">{`お題しか見られない
   → 速さと正確さのトレードオフが認識されない
@@ -331,7 +345,7 @@ export default function PlanningPage() {
         </Disclosure>
       </Panel>
 
-      <Panel era="final" title={<SectionHeading id="honsen-choice">取り得た2案と、単純案を選んだ理由</SectionHeading>} accent={accent}>
+      <Panel era="final" tone="flat" title={<SectionHeading id="honsen-choice">取り得た2案と、単純案を選んだ理由</SectionHeading>} accent={accent}>
         <DecisionLog
           accent={accent}
           items={[
@@ -381,6 +395,9 @@ export default function PlanningPage() {
             ]}
           />
         </div>
+        <PullQuote accent={accent} caption="本戦企画書 3.8">
+          速く正確に打った人が上に行く。それだけ。
+        </PullQuote>
         <p className="mt-5">
           <strong>速さは「個数」に自然に含まれる。</strong>
           速く打てる人ほど時間内に多くのたこ焼きを作れるため、速度を別の項として持つ必要がない。
@@ -418,14 +435,14 @@ export default function PlanningPage() {
         </p>
       </Panel>
 
-      <Panel era="final" title={<SectionHeading id="honsen-cull">20秒等間隔 × 6段階の足切り</SectionHeading>} accent={accent}>
+      <Panel tone="dark" title={<SectionHeading id="honsen-cull">20秒等間隔 × 6段階の足切り</SectionHeading>} accent={accent}>
         <p>脱落経路を1本に畳んだ結果、脱落は<strong>時刻で決まる</strong>ようになった。</p>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[480px] border-collapse text-sm">
             <thead>
               <tr>
                 {["時刻", "生存数", "切る数", "切る割合", "意味"].map((h) => (
-                  <th key={h} className="px-3 py-2 text-left text-xs font-bold" style={{ color: "var(--color-ink-faint)" }}>
+                  <th key={h} className="px-3 py-2 text-left text-xs font-bold" style={{ color: "rgba(251,249,244,0.5)" }}>
                     {h}
                   </th>
                 ))}
@@ -440,12 +457,12 @@ export default function PlanningPage() {
                 ["100秒", "20 → 10", "10", "50%", "決勝進出ライン"],
                 ["120秒", "10 → 0", "10", "100%", "試合終了。全店が同時に閉店"],
               ].map((r) => (
-                <tr key={r[0]} className="border-t" style={{ borderColor: "var(--color-border-soft)" }}>
-                  <td className="px-3 py-2 font-bold" style={{ color: accent }}>{r[0]}</td>
-                  <td className="px-3 py-2 font-mono text-xs" style={{ color: "var(--color-ink)" }}>{r[1]}</td>
-                  <td className="px-3 py-2" style={{ color: "var(--color-ink-dim)" }}>{r[2]}</td>
-                  <td className="px-3 py-2" style={{ color: "var(--color-ink-dim)" }}>{r[3]}</td>
-                  <td className="px-3 py-2 text-xs" style={{ color: "var(--color-ink-dim)" }}>{r[4]}</td>
+                <tr key={r[0]} className="border-t" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                  <td className="px-3 py-2.5 text-base font-black" style={{ color: accent }}>{r[0]}</td>
+                  <td className="px-3 py-2.5 font-mono text-sm font-bold" style={{ color: "#fff" }}>{r[1]}</td>
+                  <td className="px-3 py-2.5" style={{ color: "rgba(251,249,244,0.7)" }}>{r[2]}</td>
+                  <td className="px-3 py-2.5" style={{ color: "rgba(251,249,244,0.7)" }}>{r[3]}</td>
+                  <td className="px-3 py-2.5 text-xs" style={{ color: "rgba(251,249,244,0.55)" }}>{r[4]}</td>
                 </tr>
               ))}
             </tbody>

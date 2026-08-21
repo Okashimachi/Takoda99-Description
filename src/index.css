@@ -110,3 +110,138 @@ pre.codeblock {
   background: var(--color-border);
   border-radius: 6px;
 }
+
+/* ===========================================================
+   視線誘導のための追加レイヤ
+   —— 同じ大きさの白いカードが縦に並ぶだけの状態を崩す。
+   =========================================================== */
+
+:root {
+  /* 面の階層。奥（sunken）→ 地（base）→ 手前（raised）の3枚で深さを作る */
+  --color-base-sunken: #f2ede1;
+  --color-ink-inverse: #fbf9f4;
+
+  --shadow-card: 0 1px 2px rgba(33, 26, 18, 0.04), 0 8px 24px -12px rgba(33, 26, 18, 0.14);
+  --shadow-lift: 0 2px 6px rgba(33, 26, 18, 0.06), 0 18px 40px -18px rgba(33, 26, 18, 0.28);
+
+  /* セクション番号の連番 */
+  counter-reset: section-counter;
+}
+
+/* --- 本文の可読性 ---------------------------------------- */
+
+/* 1行が長すぎると視線が戻れなくなる。日本語は40〜45文字で折り返す */
+.prose-body > p,
+.prose-body > ul,
+.prose-body > ol {
+  max-width: 46em;
+}
+
+.prose-body p {
+  margin-bottom: 1.1em;
+}
+
+/* 太字は「拾い読みの足がかり」。
+   ただしマーカーは段落の中だけに限る。箇条書きや表にまで引くと
+   ページ全体が塗られて、かえって何も目立たなくなる。 */
+.prose-body strong {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+.prose-body > p strong,
+.prose-body > blockquote strong {
+  background: linear-gradient(transparent 64%, var(--marker, rgba(240, 116, 15, 0.16)) 64%);
+  padding: 0 0.04em;
+}
+
+/* リストの点をアクセント色にして、行頭を目で追えるようにする */
+.prose-body ul {
+  list-style: none;
+  padding-left: 1.4em;
+}
+.prose-body ul > li {
+  position: relative;
+}
+.prose-body ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.05em;
+  top: 0.72em;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--accent, var(--color-ink-faint));
+  opacity: 0.75;
+}
+
+/* --- セクション見出し ------------------------------------- */
+
+/* 見出しの手前に連番を置く。「いま何番目を読んでいるか」を常に返す */
+.section-heading {
+  color: var(--color-ink);
+  counter-increment: section-counter;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+.section-heading::before {
+  content: counter(section-counter, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent, var(--color-ink-faint));
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+/* --- スクロールで現れる ----------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --- 反転パネル ------------------------------------------- */
+
+/* 1ページに1〜2枚だけ置く「濃い面」。ここが目次代わりの目印になる */
+.panel-dark {
+  background: #1c1610;
+  color: var(--color-ink-inverse);
+}
+.panel-dark .prose-body p,
+.panel-dark .prose-body ul,
+.panel-dark .prose-body li {
+  color: rgba(251, 249, 244, 0.78);
+}
+.panel-dark .prose-body strong {
+  color: #fff;
+  background: linear-gradient(transparent 62%, var(--marker, rgba(255, 255, 255, 0.22)) 62%);
+}
+.panel-dark .prose-body code {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fdf6e6;
+}
+.panel-dark .section-heading {
+  color: #fff;
+}
+.panel-dark pre.codeblock {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.12);
+}

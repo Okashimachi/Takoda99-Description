@@ -3,6 +3,7 @@ import { Panel } from "../components/Panel";
 import { Disclosure } from "../components/Disclosure";
 import { DecisionLog, EffortNote } from "../components/Bits";
 import { CompareTile, EraCompare } from "../components/Era";
+import { Callout, PullQuote } from "../components/Display";
 import { sections } from "../lib/accentTheme";
 import { images } from "../assets/images";
 
@@ -51,10 +52,11 @@ export default function ArtPage() {
       title="アート"
       lead="予選の絵を、本戦でどう作り替えたか。変更前後を並べて見せます。"
       ownerLine="担当: たまちゃ"
+      heroImage={images.screens.matchmaking}
       toc={toc}
     >
-      <Panel accent={accent}>
-        <p>
+      <Panel tone="flat" accent={accent}>
+        <p className="text-lg leading-relaxed md:text-xl">
           アートは<strong>4役割の中で唯一、純粋にタスクが増えた役割</strong>。
           企画側で情報量を減らす決定をしたが、それは「絵が小さくて済む」ではなく
           <strong>「1枚あたりの面積が大きくなる」</strong>ことを意味していた。
@@ -69,7 +71,7 @@ export default function ArtPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="verdict">何がどう変わったか</SectionHeading>} accent={accent}>
+      <Panel tone="tint" title={<SectionHeading id="verdict">何がどう変わったか</SectionHeading>} accent={accent}>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[540px] border-collapse text-sm">
             <thead>
@@ -114,6 +116,9 @@ export default function ArtPage() {
           体力がいくつ残っているかを、屋台の傷み具合・暖簾の破れ・提灯の点灯で見せる。
           本戦で体力そのものが廃止されたため、<strong>この役割ごと無くなった</strong>。
         </p>
+        <PullQuote accent={accent} caption="予選のフィードバック「お題しか見られない」より">
+          丁寧に描き分けた4段階が、そもそも見られていなかった。
+        </PullQuote>
         <EraCompare
           accent={accent}
           before={
@@ -146,29 +151,31 @@ export default function ArtPage() {
           }
           note={
             <>
-              予選の観測で分かったのは、<strong>体力表現はほとんど見られていなかった</strong>ということ。
-              「お題しか見られない」というフィードバックどおり、屋台の傷み具合に視線は行っていなかった。
-              <strong>丁寧に描き分けた4段階が、プレイヤーに届いていなかった</strong>のが出発点になっている。
+              絵の質の問題ではなく、<strong>そこに視線が行かない画面設計だった</strong>という話。
+              描き直すのではなく<strong>役割ごと畳む</strong>判断になったのはこのため。
             </>
           }
         />
       </Panel>
 
-      <Panel title={<SectionHeading id="life">消えた13枚と、増えた19枚</SectionHeading>} accent={accent}>
+      <Panel tone="dark" title={<SectionHeading id="life">消えた13枚と、増えた19枚</SectionHeading>} accent={accent}>
         <p>
           リポジトリの追加履歴で数えると、変化がそのまま枚数に出ている。
         </p>
 
         <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
           <div
-            className="rounded-xl border border-dashed p-4"
-            style={{ borderColor: "var(--color-border)", background: "var(--color-base-panel)" }}
+            className="rounded-xl border border-dashed p-5"
+            style={{ borderColor: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.03)" }}
           >
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black" style={{ color: "var(--color-ink-faint)" }}>13</span>
-              <span className="text-sm font-bold" style={{ color: "var(--color-ink-dim)" }}>枚が画面から消えた</span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-5xl font-black leading-none" style={{ color: "rgba(251,249,244,0.55)" }}>13</span>
+              <span className="text-base font-bold" style={{ color: "rgba(251,249,244,0.55)" }}>枚</span>
             </div>
-            <p className="mt-1 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+            <div className="mt-2 text-sm font-bold" style={{ color: "rgba(251,249,244,0.85)" }}>
+              画面から消えた
+            </div>
+            <p className="mt-0.5 text-xs" style={{ color: "rgba(251,249,244,0.5)" }}>
               すべて「ライフの段階」を描いた絵
             </p>
             <div className="mt-4 grid grid-cols-5 gap-1.5 md:grid-cols-7">
@@ -179,14 +186,17 @@ export default function ArtPage() {
           </div>
 
           <div
-            className="rounded-xl border p-4"
-            style={{ borderColor: "var(--color-border-soft)", borderLeft: `5px solid ${accent}`, background: "var(--color-base-raised)" }}
+            className="rounded-xl border p-5"
+            style={{ borderColor: "transparent", borderLeft: `5px solid ${accent}`, background: "rgba(255,255,255,0.06)" }}
           >
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black" style={{ color: accent }}>19</span>
-              <span className="text-sm font-bold" style={{ color: "var(--color-ink)" }}>枚を新しく描いた</span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-5xl font-black leading-none" style={{ color: accent }}>19</span>
+              <span className="text-base font-bold" style={{ color: accent }}>枚</span>
             </div>
-            <p className="mt-1 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+            <div className="mt-2 text-sm font-bold" style={{ color: "#fff" }}>
+              新しく描いた
+            </div>
+            <p className="mt-0.5 text-xs" style={{ color: "rgba(251,249,244,0.5)" }}>
               情報の器（パネル8種・ネオン枠）と、手触り（手・舟皿6種）
             </p>
             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -203,7 +213,7 @@ export default function ArtPage() {
           </div>
         </div>
 
-        <p className="mt-5 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+        <p className="mt-6 text-base leading-relaxed">
           <strong>捨てた枚数より描いた枚数のほうが多い。</strong>
           「情報を減らす」という決定が、アートにとっては純粋な作業増だったことがそのまま出ている。
           ただし<strong>消えた13枚は素材として失われたわけではない</strong>
@@ -211,7 +221,7 @@ export default function ArtPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="tone">トーンの決定：和・大人しめ → ネオン</SectionHeading>} accent={accent}>
+      <Panel tone="tint" title={<SectionHeading id="tone">トーンの決定：和・大人しめ → ネオン</SectionHeading>} accent={accent}>
         <p className="mb-4">
           情報量が減ったことで、トーンを選び直せる状態になった。企画側は選択肢だけを出し、
           <strong>方向はアート担当の判断に委ねている</strong>。
@@ -303,16 +313,18 @@ export default function ArtPage() {
             </div>
           ))}
         </div>
-        <Disclosure summary="コード名と見た目の対応が1箇所ずれている" accent={accent}>
+        <Callout accent={accent} label="見つけた食い違い" variant="warn">
           <p>
             属性と見た目の割り当ては <code>CustomerSpriteLibrary.asset</code> が正で、
             <strong>Bonus＝お笑い芸人 / Claimer＝ヒョウ柄おばちゃん</strong>。
-            一方 Proto の <code>CustomerAttribute</code> のコメントは
-            <code>Bonus // ヒョウ柄おばちゃん等</code> になっており、食い違っている。
+            Proto のコメントだけが <code>Bonus // ヒョウ柄おばちゃん等</code> のまま残っている。
           </p>
-          <p className="mt-3">
-            本戦では属性が評価に効かなくなったため<strong>実害は無い</strong>が、
-            用語集を正典として運用している以上、直すならコメント側。
+        </Callout>
+        <Disclosure summary="この食い違いを直すべきか" accent={accent}>
+          <p>
+            本戦では属性が評価に効かなくなったため<strong>実害は無い</strong>。
+            ただし用語集を正典として運用している以上、<strong>直すならコメント側</strong>になる。
+            実装・素材の命名・このサイトはすべて SO の割り当てで揃っている。
           </p>
         </Disclosure>
       </Panel>
@@ -364,7 +376,7 @@ export default function ArtPage() {
         />
       </Panel>
 
-      <Panel title={<SectionHeading id="sound">サウンド</SectionHeading>} accent={accent}>
+      <Panel tone="flat" title={<SectionHeading id="sound">サウンド</SectionHeading>} accent={accent}>
         <EraCompare
           accent={accent}
           before={
@@ -402,7 +414,7 @@ export default function ArtPage() {
         </p>
       </Panel>
 
-      <Panel title={<SectionHeading id="flow">制作フロー</SectionHeading>} accent={accent}>
+      <Panel tone="flat" title={<SectionHeading id="flow">制作フロー</SectionHeading>} accent={accent}>
         <p>
           仮素材（色付き矩形＋テキスト）で先に動かし、後から差し替える運用。
           <code>ViewSampleDriver</code> でサンプルデータ駆動の画面を作れるようにしてある。

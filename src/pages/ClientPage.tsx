@@ -3,6 +3,8 @@ import { Panel } from "../components/Panel";
 import { Disclosure } from "../components/Disclosure";
 import { DecisionLog, DiffTable, EffortNote, GitHubLink, TermTag } from "../components/Bits";
 import { EraDivider, EraStamp, EraZoneHeader } from "../components/Era";
+import { Callout, PullQuote } from "../components/Display";
+import { images } from "../assets/images";
 import { sections } from "../lib/accentTheme";
 
 const accent = sections.client.accent;
@@ -42,10 +44,11 @@ export default function ClientPage() {
       title="クライアントサイド"
       lead="サーバー権威下の“薄いクライアント”を、いかに壊れない形で組むか。"
       ownerLine="担当: カシュー"
+      heroImage={images.screens.matchIngame}
       toc={toc}
     >
-      <Panel accent={accent}>
-        <p>
+      <Panel tone="flat" accent={accent}>
+        <p className="text-lg leading-relaxed md:text-xl">
           Unity WebGL / unityroom公開。クライアントは受信stateを描画するだけの薄い層に徹する。
         </p>
         <p className="mt-3">
@@ -176,7 +179,7 @@ export default function ClientPage() {
         </ul>
       </Panel>
 
-      <Panel era="qual" title={<SectionHeading id="send">送信設計：注文単位での集約</SectionHeading>} accent={accent}>
+      <Panel era="qual" tone="flat" title={<SectionHeading id="send">送信設計：注文単位での集約</SectionHeading>} accent={accent}>
         <p>
           1文字ごとに送らない。注文単位で <code>OrderServed</code>（<code>customerId</code> / <code>elapsedMs</code> /
           <code>missCount</code> / <code>clientTimestamp</code>）に集約する。
@@ -184,7 +187,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel era="qual" title={<SectionHeading id="webgl">WebGL制約</SectionHeading>} accent={accent}>
+      <Panel era="qual" tone="flat" title={<SectionHeading id="webgl">WebGL制約</SectionHeading>} accent={accent}>
         <p>
           <code>System.Net.WebSockets</code> が使えないため <TermTag>NativeWebSocket</TermTag> を採用。
           自前のディスパッチループが無いため <code>Update</code> で <code>DispatchMessageQueue()</code> を呼ぶ
@@ -219,7 +222,7 @@ export default function ClientPage() {
         </ul>
       </Panel>
 
-      <Panel era="qual" title={<SectionHeading id="views">描画モジュールと値オブジェクト</SectionHeading>} accent={accent}>
+      <Panel era="qual" tone="flat" title={<SectionHeading id="views">描画モジュールと値オブジェクト</SectionHeading>} accent={accent}>
         <ul>
           <li><code>MainStoreView</code>：暖簾・屋台土台・お題単語・提灯・鉄板</li>
           <li><code>TakoyakiStandView</code>：24穴のスロット</li>
@@ -326,7 +329,13 @@ export default function ClientPage() {
             <strong>この1点で総崩れになる</strong>
           </li>
         </ul>
-        <Disclosure summary="Obsoleteフィールドは「消える」のではなく「0で届く」" accent={accent}>
+        <Callout accent={accent} label="ここが一番の落とし穴" variant="warn">
+          <p>
+            Obsolete フィールドは<strong>型から消えず、ゼロ値で届く</strong>。
+            「残して呼ばない」は無効化ではなく<strong>誤作動</strong>になる。
+          </p>
+        </Callout>
+        <Disclosure summary="0で届くと具体的に何が起きるか" accent={accent}>
           <p>
             Proto v0.8.0 は互換のため Obsolete フィールドを型から消していない。
             <strong>JSONにキーは存在し、ゼロ値が届く。</strong>
@@ -441,7 +450,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel era="final" title={<SectionHeading id="personal">予選のバグを、実装ではなく設計で潰した</SectionHeading>} accent={accent}>
+      <Panel tone="dark" title={<SectionHeading id="personal">予選のバグを、実装ではなく設計で潰した</SectionHeading>} accent={accent}>
         <p>予選で踏んだ、いちばん痛い不具合。</p>
         <pre className="codeblock">{`脱落モーダル →「次へ」→ 個人成績シーンへ遷移
                           ↓
@@ -450,9 +459,11 @@ export default function ClientPage() {
               しかしサーバーが個人成績を送るのは【全員の試合が終わった時】
                           ↓
               1位が決まる前に遷移すると、何も表示されない ★バグ`}</pre>
+        <PullQuote accent={accent}>
+          プレイヤーがボタンを押す速さに、データの有無が依存していた。
+        </PullQuote>
         <p className="mt-4">
           原因は<strong>画面遷移のタイミングとデータ受信のタイミングが結びついていたこと</strong>。
-          <strong>プレイヤーがボタンを押す速さに、データの有無が依存していた。</strong>
         </p>
         <p className="mt-3">
           本戦では、<strong>脱落した瞬間に <code>PersonalResult</code> を受信して保持する</strong>方式に変えた。
@@ -498,7 +509,7 @@ export default function ClientPage() {
         </p>
       </Panel>
 
-      <Panel era="final" title={<SectionHeading id="polish">削った分を演出に回した</SectionHeading>} accent={accent}>
+      <Panel era="final" tone="flat" title={<SectionHeading id="polish">削った分を演出に回した</SectionHeading>} accent={accent}>
         <p>
           本戦対応は撤去が中心だったぶん、空いた時間を<strong>体験の底上げ</strong>に使えた。
         </p>
