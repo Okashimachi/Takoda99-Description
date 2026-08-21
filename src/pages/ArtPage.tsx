@@ -1,18 +1,20 @@
 import { PageLayout, SectionHeading } from "../components/PageLayout";
 import { Panel } from "../components/Panel";
-import { EffortNote } from "../components/Bits";
+import { Disclosure } from "../components/Disclosure";
+import { DecisionLog, EffortNote } from "../components/Bits";
+import { CompareTile, EraCompare } from "../components/Era";
 import { sections } from "../lib/accentTheme";
 import { images } from "../assets/images";
 
 const accent = sections.art.accent;
 
 const toc = [
-  { id: "characters", label: "キャラクター" },
-  { id: "mapping", label: "客属性とメカニクスの対応" },
-  { id: "stand", label: "屋台の画面要素" },
-  { id: "damage", label: "劣化表現" },
-  { id: "sub", label: "他店ミニ盤面" },
-  { id: "bg", label: "背景モチーフ" },
+  { id: "verdict", label: "何がどう変わったか" },
+  { id: "role", label: "絵の役割が入れ替わった" },
+  { id: "life", label: "消えた13枚" },
+  { id: "tone", label: "トーンの決定" },
+  { id: "kept", label: "変わらなかったもの" },
+  { id: "cooking", label: "増えた手触り" },
   { id: "sound", label: "サウンド" },
   { id: "flow", label: "制作フロー" },
 ];
@@ -25,11 +27,21 @@ const chars = [
   ["Buzz", "JK", images.characters.buzz],
 ];
 
-const mapping = [
-  ["通常客", "Normal", "標準的な注文と我慢ゲージ"],
-  ["ヒョウ柄おばちゃん", "Bonus", "捌くと評価に加点"],
-  ["クレーマー", "Claimer", "ミスに非対称に厳しい（減点＞加点）"],
-  ["JK", "Buzz", "捌くとバズ加点（減衰・上限あり）"],
+// 予選で「ライフの段階」を描いていた絵。すべて本戦の画面には出ない。
+const lifeArt = [
+  [images.art.boothLife3, "屋台 ライフ3"],
+  [images.art.boothLife2, "屋台 ライフ2"],
+  [images.art.boothLife1, "屋台 ライフ1"],
+  [images.art.boothLife0, "屋台 ライフ0"],
+  [images.art.noren, "暖簾 ライフ3"],
+  [images.art.norenLife2, "暖簾 ライフ2"],
+  [images.art.norenLife1, "暖簾 ライフ1"],
+  [images.art.lantern, "提灯 点灯"],
+  [images.art.lanternOff, "提灯 消灯"],
+  [images.art.minitileLife3, "ミニタイル 3"],
+  [images.art.minitileLife2, "ミニタイル 2"],
+  [images.art.minitileLife1, "ミニタイル 1"],
+  [images.art.minitileLife0, "ミニタイル 0"],
 ];
 
 export default function ArtPage() {
@@ -37,118 +49,357 @@ export default function ArtPage() {
     <PageLayout
       section="art"
       title="アート"
-      lead="大阪をどう画面に落とすか。唯一ビジュアルで殴れるページです。"
+      lead="予選の絵を、本戦でどう作り替えたか。変更前後を並べて見せます。"
       ownerLine="担当: たまちゃ"
       toc={toc}
     >
-      <Panel title={<SectionHeading id="characters">コンセプトアート・キャラクター</SectionHeading>} accent={accent}>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+      <Panel accent={accent}>
+        <p>
+          アートは<strong>4役割の中で唯一、純粋にタスクが増えた役割</strong>。
+          企画側で情報量を減らす決定をしたが、それは「絵が小さくて済む」ではなく
+          <strong>「1枚あたりの面積が大きくなる」</strong>ことを意味していた。
+        </p>
+        <p className="mt-3 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          このページは差分を並べる形で書いている。
+          <strong>左が予選版、右が本戦版</strong>。ゲームのルールの変更そのものは
+          <a href="/planning#honsen" className="mx-1 underline" style={{ color: "var(--color-planning)" }}>
+            企画ページ
+          </a>
+          を参照。
+        </p>
+      </Panel>
+
+      <Panel title={<SectionHeading id="verdict">何がどう変わったか</SectionHeading>} accent={accent}>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[540px] border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="w-[22%] px-3 py-2 text-left text-xs font-bold" style={{ color: "var(--color-ink-faint)" }}>
+                  観点
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-bold" style={{ color: "var(--color-ink-faint)" }}>
+                  予選版
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-bold" style={{ color: accent }}>
+                  本戦版
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["絵の役割", "体力を可視化する（数値の表現）", "情報を大きく見せる器（枠とパネル）"],
+                ["トーン", "和・大人しめ", "ネオン・色数多め"],
+                ["情報密度", "高い。99店ぶんを画面に収める", "低い。大きなパネルで見せる"],
+                ["段階表現", "ライフ4段階を絵で描き分ける", "段階そのものが消えた"],
+                ["お題の枠", "文字が収まる必要があった", "収まらないことを演出にした"],
+                ["脱落の絵", "1店ずつ静かに閉店", "数十店が一斉に閉店。6回で強度を上げる"],
+                ["リザルト", "その場しのぎの1パターン", "一新＋順位別4パターン"],
+                ["画面の向き", "縦画面", "縦画面のまま（据え置き）"],
+                ["客キャラ", "見た目＋評価に効く", "見た目だけ。絵はそのまま"],
+              ].map((r) => (
+                <tr key={r[0]} className="border-t align-top" style={{ borderColor: "var(--color-border-soft)" }}>
+                  <td className="px-3 py-2.5 font-bold" style={{ color: "var(--color-ink)" }}>{r[0]}</td>
+                  <td className="px-3 py-2.5" style={{ color: "var(--color-ink-faint)" }}>{r[1]}</td>
+                  <td className="px-3 py-2.5 font-semibold" style={{ color: "var(--color-ink)" }}>{r[2]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Panel>
+
+      <Panel title={<SectionHeading id="role">絵の役割が入れ替わった</SectionHeading>} accent={accent}>
+        <p className="mb-5">
+          予選のアートは<strong>「数値を絵で表現する」</strong>ために作られていた。
+          体力がいくつ残っているかを、屋台の傷み具合・暖簾の破れ・提灯の点灯で見せる。
+          本戦で体力そのものが廃止されたため、<strong>この役割ごと無くなった</strong>。
+        </p>
+        <EraCompare
+          accent={accent}
+          before={
+            <>
+              <div className="mb-3 grid grid-cols-4 gap-2">
+                <CompareTile src={images.art.boothLife3} label="ライフ3" muted />
+                <CompareTile src={images.art.boothLife2} label="ライフ2" muted />
+                <CompareTile src={images.art.boothLife1} label="ライフ1" muted />
+                <CompareTile src={images.art.boothLife0} label="ライフ0" muted />
+              </div>
+              <p>
+                <strong>屋台そのものが体力ゲージだった。</strong>
+                客を逃すたびに傷み、暖簾が破れ、提灯が消える。
+                提灯の比喩はそのまま <code>CreditLifeLanternState</code> という型名になっていた。
+              </p>
+            </>
+          }
+          after={
+            <>
+              <div className="mb-3 grid grid-cols-2 gap-2">
+                <CompareTile src={images.art.takoyakiNeonPanel} label="ネオンのたこ焼き" />
+                <CompareTile src={images.art.panel5} label="ランキングのパネル枠" />
+              </div>
+              <p>
+                <strong>絵は数値を語らなくなった。</strong>
+                代わりに、順位・名前・スコアという文字情報を<strong>大きく載せるための器</strong>になる。
+                ネオン枠・パネル・大型の順位表示が新しい主役。
+              </p>
+            </>
+          }
+          note={
+            <>
+              予選の観測で分かったのは、<strong>体力表現はほとんど見られていなかった</strong>ということ。
+              「お題しか見られない」というフィードバックどおり、屋台の傷み具合に視線は行っていなかった。
+              <strong>丁寧に描き分けた4段階が、プレイヤーに届いていなかった</strong>のが出発点になっている。
+            </>
+          }
+        />
+      </Panel>
+
+      <Panel title={<SectionHeading id="life">消えた13枚と、増えた19枚</SectionHeading>} accent={accent}>
+        <p>
+          リポジトリの追加履歴で数えると、変化がそのまま枚数に出ている。
+        </p>
+
+        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div
+            className="rounded-xl border border-dashed p-4"
+            style={{ borderColor: "var(--color-border)", background: "var(--color-base-panel)" }}
+          >
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-black" style={{ color: "var(--color-ink-faint)" }}>13</span>
+              <span className="text-sm font-bold" style={{ color: "var(--color-ink-dim)" }}>枚が画面から消えた</span>
+            </div>
+            <p className="mt-1 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+              すべて「ライフの段階」を描いた絵
+            </p>
+            <div className="mt-4 grid grid-cols-5 gap-1.5 md:grid-cols-7">
+              {lifeArt.map(([src, label]) => (
+                <CompareTile key={label} src={src as string} label={label as string} muted hideLabel />
+              ))}
+            </div>
+          </div>
+
+          <div
+            className="rounded-xl border p-4"
+            style={{ borderColor: "var(--color-border-soft)", borderLeft: `5px solid ${accent}`, background: "var(--color-base-raised)" }}
+          >
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-black" style={{ color: accent }}>19</span>
+              <span className="text-sm font-bold" style={{ color: "var(--color-ink)" }}>枚を新しく描いた</span>
+            </div>
+            <p className="mt-1 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+              情報の器（パネル8種・ネオン枠）と、手触り（手・舟皿6種）
+            </p>
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              <CompareTile src={images.art.panel1} label="パネル枠" />
+              <CompareTile src={images.art.neonFrame} label="ネオン枠" />
+              <CompareTile src={images.art.hand} label="調理の手" />
+              <CompareTile src={images.art.tray2} label="舟皿 2個" />
+              <CompareTile src={images.art.tray4} label="舟皿 4個" />
+              <CompareTile src={images.art.tray8} label="舟皿 8個" />
+              <CompareTile src={images.art.takoyakiBurnt} label="失敗した玉" />
+              <CompareTile src={images.art.trayFail2} label="失敗の皿" />
+              <CompareTile src={images.art.panel5} label="パネル（別型）" />
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-5 text-sm" style={{ color: "var(--color-ink-dim)" }}>
+          <strong>捨てた枚数より描いた枚数のほうが多い。</strong>
+          「情報を減らす」という決定が、アートにとっては純粋な作業増だったことがそのまま出ている。
+          ただし<strong>消えた13枚は素材として失われたわけではない</strong>
+          （画面に出なくなっただけで、リポジトリには残っている）。
+        </p>
+      </Panel>
+
+      <Panel title={<SectionHeading id="tone">トーンの決定：和・大人しめ → ネオン</SectionHeading>} accent={accent}>
+        <p className="mb-4">
+          情報量が減ったことで、トーンを選び直せる状態になった。企画側は選択肢だけを出し、
+          <strong>方向はアート担当の判断に委ねている</strong>。
+        </p>
+        <DecisionLog
+          accent={accent}
+          items={[
+            {
+              adopted: "ギラギラ・色数多め（ネオン）— 大型パネルと相性が良く、遠目に映える",
+              rejected: "和・大人しめのまま維持 — 作業量は最小だが、情報を削った意味が薄れる",
+            },
+          ]}
+        />
+        <div className="mt-5">
+          <EraCompare
+            accent={accent}
+            before={
+              <>
+                <div className="mb-3 grid grid-cols-3 gap-2">
+                  <CompareTile src={images.art.lantern} label="提灯" muted />
+                  <CompareTile src={images.art.noren} label="暖簾" muted />
+                  <CompareTile src={images.art.stand} label="屋台" muted />
+                </div>
+                <p>木と紙、暖色の提灯。落ち着いた和の方向。</p>
+              </>
+            }
+            after={
+              <>
+                <div className="mb-3 grid grid-cols-3 gap-2">
+                  <CompareTile src={images.art.takoyakiNeonPanel} label="ネオン" />
+                  <CompareTile src={images.art.neonFrame} label="ネオン枠" />
+                  <CompareTile src={images.art.panel5} label="パネル" />
+                </div>
+                <p>発光する輪郭と黒地。タイトル・マッチング・リザルトを通してネオンで揃えた。</p>
+              </>
+            }
+            note={
+              <>
+                判断材料は審査基準。<strong>アイデア・コンセプト・技術力は取れる見込みで、決勝はオーディエンス票が効く</strong>。
+                会場の後ろから見て何が起きているか分かることを優先し、遠目に映える方向を採った。
+                <strong>ダイナミックなUIは情報量を減らすことが前提</strong>であり、その前提は本戦で満たされていた。
+              </>
+            }
+          />
+        </div>
+        <div className="mt-5 overflow-hidden rounded-xl border" style={{ borderColor: "var(--color-border-soft)" }}>
+          <img
+            src={images.screens.matchmaking}
+            alt="マッチング画面"
+            loading="lazy"
+            className="w-full object-cover"
+          />
+        </div>
+        <p className="mt-2 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+          通天閣・道頓堀モチーフの背景。ネオンの発光をそのまま画面のトーンに使っている。
+        </p>
+      </Panel>
+
+      <Panel title={<SectionHeading id="kept">変わらなかったもの ★重要</SectionHeading>} accent={accent}>
+        <EraCompare
+          accent={accent}
+          before={
+            <p>
+              客の属性が<strong>評価に効いていた</strong>。
+              ヒョウ柄おばちゃんは加点、クレーマーはミスに厳しく、JKは大きく変動する。
+              <strong>「評価にどう効くかを絵で伝える」</strong>という制約があった。
+            </p>
+          }
+          after={
+            <p>
+              属性の効果は<strong>廃止され、見た目だけになった</strong>。
+              内部でゲームに効かなくなっただけで、<strong>画面からは何も消えていない</strong>。
+              制約が外れたぶん、<strong>キャラクターは純粋に可愛さ・面白さだけで描ける</strong>。
+            </p>
+          }
+          note="客キャラクター・属性の見た目・客の行列・背景は、本戦でもそのまま画面に出る。アート素材が無駄になったものは1枚もない。"
+        />
+        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           {chars.map(([key, label, src]) => (
             <div key={key} className="text-center">
               <div
                 className="aspect-square overflow-hidden rounded-xl border"
                 style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-panel)" }}
               >
-                <img src={src} alt={label} className="h-full w-full object-contain" onError={(e) => (e.currentTarget.style.opacity = "0.15")} />
+                <img src={src} alt={label} loading="lazy" className="h-full w-full object-contain" />
               </div>
-              <div className="mt-2 text-xs" style={{ color: "var(--color-ink-dim)" }}>{label}</div>
+              <div className="mt-2 text-sm font-bold" style={{ color: "var(--color-ink)" }}>{label}</div>
+              <div className="text-[0.65rem] font-mono" style={{ color: "var(--color-ink-faint)" }}>{key}</div>
             </div>
           ))}
         </div>
-        <p className="mt-4 text-sm" style={{ color: "var(--color-ink-faint)" }}>
-          通天閣のおっちゃんも登場予定（画像は後日追加）。
-        </p>
+        <Disclosure summary="コード名と見た目の対応が1箇所ずれている" accent={accent}>
+          <p>
+            属性と見た目の割り当ては <code>CustomerSpriteLibrary.asset</code> が正で、
+            <strong>Bonus＝お笑い芸人 / Claimer＝ヒョウ柄おばちゃん</strong>。
+            一方 Proto の <code>CustomerAttribute</code> のコメントは
+            <code>Bonus // ヒョウ柄おばちゃん等</code> になっており、食い違っている。
+          </p>
+          <p className="mt-3">
+            本戦では属性が評価に効かなくなったため<strong>実害は無い</strong>が、
+            用語集を正典として運用している以上、直すならコメント側。
+          </p>
+        </Disclosure>
       </Panel>
 
-      <Panel title={<SectionHeading id="mapping">客属性とメカニクスの対応表</SectionHeading>} accent={accent}>
-        <p className="mb-4">見た目でリスク/リターンが分かる ＝ UIとしても機能するデザイン。</p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b" style={{ borderColor: "var(--color-border-soft)" }}>
-                <th className="p-2 text-left" style={{ color: "var(--color-ink)" }}>見た目</th>
-                <th className="p-2 text-left" style={{ color: "var(--color-ink)" }}>コード名</th>
-                <th className="p-2 text-left" style={{ color: "var(--color-ink)" }}>メカニクス</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mapping.map((row) => (
-                <tr key={row[1]} className="border-b" style={{ borderColor: "var(--color-border-soft)" }}>
-                  {row.map((c, i) => (
-                    <td key={i} className="p-2" style={{ color: i === 0 ? "var(--color-ink)" : "var(--color-ink-dim)" }}>{c}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-3 text-xs" style={{ color: "var(--color-ink-faint)" }}>
-          「デザインが仕様と接続されている」— 企画/仕様ページの客属性メカニクスと対応。
+      <Panel title={<SectionHeading id="cooking">増えた手触り：調理アニメと舟皿の出し分け</SectionHeading>} accent={accent}>
+        <p className="mb-5">
+          削って空いたぶんを、<strong>1回の提供が気持ちよくなる方向</strong>に使った。
+          スコアが「作ったたこ焼きの数」になったことで、
+          <strong>1個作る動作そのものが報酬になる</strong>ためでもある。
         </p>
-      </Panel>
-
-      <Panel title={<SectionHeading id="stand">屋台の画面要素</SectionHeading>} accent={accent}>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {[
-            ["暖簾", images.art.noren],
-            ["屋台の土台", images.art.stand],
-            ["鉄板", images.art.griddle],
-            ["たこ焼き", images.art.takoyaki],
-          ].map(([label, src]) => (
-            <div key={label} className="text-center">
-              <div
-                className="aspect-square overflow-hidden rounded-xl border"
-                style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-panel)" }}
-              >
-                <img src={src} alt={label} className="h-full w-full object-contain" onError={(e) => (e.currentTarget.style.opacity = "0.15")} />
+        <EraCompare
+          accent={accent}
+          before={
+            <>
+              <div className="mb-3 grid grid-cols-3 gap-2">
+                <CompareTile src={images.art.takoyakiRaw} label="生" muted />
+                <CompareTile src={images.art.takoyakiHalf} label="半焼き" muted />
+                <CompareTile src={images.art.takoyaki} label="完成" muted />
               </div>
-              <div className="mt-2 text-xs" style={{ color: "var(--color-ink-dim)" }}>{label}</div>
-            </div>
-          ))}
-        </div>
-        <p className="mt-4 text-sm">
-          実装のView名と対応しているのが面白い点。提灯の比喩はそのまま <code>CreditLifeLanternState</code> という型名になっている。
-        </p>
-      </Panel>
-
-      <Panel title={<SectionHeading id="damage">ミスによる劣化表現</SectionHeading>} accent={accent}>
-        <div className="grid grid-cols-2 gap-4 md:w-1/2">
-          {[
-            ["正常", images.art.takoyaki],
-            ["劣化（ミス蓄積）", images.art.takoyakiBurnt],
-          ].map(([label, src]) => (
-            <div key={label} className="text-center">
-              <div
-                className="aspect-square overflow-hidden rounded-xl border"
-                style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-panel)" }}
-              >
-                <img src={src} alt={label} className="h-full w-full object-contain" onError={(e) => (e.currentTarget.style.opacity = "0.15")} />
+              <p>鉄板の穴の絵が差し替わるだけ。提供しても皿は1種類。</p>
+            </>
+          }
+          after={
+            <>
+              <div className="mb-3 grid grid-cols-3 gap-2">
+                <CompareTile src={images.art.hand} label="手" />
+                <CompareTile src={images.art.tray8} label="舟皿 8個" />
+              <CompareTile src={images.art.takoyakiBurnt} label="失敗した玉" />
+              <CompareTile src={images.art.trayFail2} label="失敗の皿" />
+              <CompareTile src={images.art.panel5} label="パネル（別型）" />
+                <CompareTile src={images.art.takoyakiBurnt} label="失敗した玉" />
               </div>
-              <div className="mt-2 text-xs" style={{ color: "var(--color-ink-dim)" }}>{label}</div>
-            </div>
-          ))}
-        </div>
-        <p className="mt-3 text-sm">見た目の劣化そのものが評価の可視化になっている。</p>
-      </Panel>
-
-      <Panel title={<SectionHeading id="sub">他店98店のミニ盤面（テト99式）</SectionHeading>} accent={accent}>
-        <p>
-          テトリス99を参照したミニ盤面のビジュアル設計。情報密度を絞り、
-          98店のタイルを一目でスキャンできるよう整理している。
-        </p>
-      </Panel>
-
-      <Panel title={<SectionHeading id="bg">背景モチーフ</SectionHeading>} accent={accent}>
-        <p>通天閣・道頓堀モチーフの背景。フェーズ移行に合わせて画面変化を入れる。</p>
+              <p>
+                手が穴を巡回して焼き、玉が飛んで舟皿に載る。
+                <strong>提供数（2 / 4 / 8個）で皿の絵が変わり</strong>、成否でも出し分ける。
+              </p>
+            </>
+          }
+          note={
+            <>
+              調整値は ScriptableObject に外出ししてあり、
+              <strong>実機で見ながら詰められる</strong>形にしてある（実装は
+              <a href="/client#polish" className="mx-1 underline" style={{ color: "var(--color-client)" }}>
+                クライアントページ
+              </a>
+              ）。
+            </>
+          }
+        />
       </Panel>
 
       <Panel title={<SectionHeading id="sound">サウンド</SectionHeading>} accent={accent}>
-        <ul>
-          <li>打鍵音（連打に耐える短い音）</li>
-          <li>ミス音</li>
-          <li>提供音（通常・高評価の2種）</li>
-          <li>BGMのフェーズ遷移</li>
-        </ul>
+        <EraCompare
+          accent={accent}
+          before={
+            <ul>
+              <li>打鍵音・ミス音・提供音（通常/高評価）</li>
+              <li>客来店音・<strong>客離脱音</strong></li>
+              <li><strong>他店脱落音を1店ずつ再生</strong></li>
+              <li>評価の上昇/下降音</li>
+              <li>リザルトのジングル 1種</li>
+            </ul>
+          }
+          after={
+            <ul>
+              <li>打鍵音・ミス音・提供音 — <strong>変更なし。引き続き最優先</strong></li>
+              <li>客離脱音は<strong>不要</strong>（客が逃げなくなった）</li>
+              <li>
+                <strong>一斉脱落は1回の大きな音に集約</strong>
+              </li>
+              <li><strong>足切りの秒読み音（新規）</strong></li>
+              <li><strong>リザルトのジングル 4種</strong>（順位別）</li>
+            </ul>
+          }
+          note={
+            <>
+              <strong>予選の他店脱落音をそのまま使うと、足切りのたびに最大49回同時に鳴って破綻する。</strong>
+              1件ずつ鳴らす前提が崩れたので、集約版に置き換えた。
+              足切りが20秒等間隔になったことは音楽の設計にも効いていて、
+              <strong>BGMを20秒単位で構成すれば、脱落のタイミングと曲の切り替わりを揃えられる</strong>。
+            </>
+          }
+        />
+        <p className="mt-4 text-xs" style={{ color: "var(--color-ink-faint)" }}>
+          素材は <a href="https://otologic.jp/" target="_blank" rel="noreferrer noopener" className="underline">OtoLogic</a> から取得。
+          音源ファイル本体はリポジトリにコミットせず <code>.meta</code> のみ管理している。
+        </p>
       </Panel>
 
       <Panel title={<SectionHeading id="flow">制作フロー</SectionHeading>} accent={accent}>
@@ -159,13 +410,24 @@ export default function ArtPage() {
         <p className="mt-3 font-bold" style={{ color: accent }}>
           「アートを待たずに開発が止まらない体制」＝開発手法の話でもある。
         </p>
+        <p className="mt-3 text-sm">
+          本戦ではこれが効いた。<strong>アートは proto・サーバーに依存せず即着手できる</strong>一方、
+          クライアント側は先にランキングUIを仮素材で組み、
+          <strong>ネオン素材が上がってから差し替える</strong>という並行の進め方ができている。
+        </p>
       </Panel>
 
       <EffortNote accent={accent}>
         <p>
-          ラフ画から実装まで、仮素材運用のおかげでアート未着手のまま画面遷移や当たり判定の検証ができた。
-          客属性の見た目を先にメカニクスへ対応づけたことで、プレイヤーは説明文を読まずとも
-          リスク/リターンを直感的に判断できる。
+          いちばん割り切りが要ったのは、<strong>丁寧に描き分けたライフ4段階を「見られていなかった」と認めて捨てたこと</strong>。
+          絵の質の問題ではなく、<strong>そこに視線が行かない画面設計だった</strong>という話なので、
+          描き直すのではなく役割ごと畳む判断になった。
+        </p>
+        <p className="mt-3">
+          代わりに得たのは、1枚あたりの面積とトーンの自由。
+          和で大人しくまとめていたところをネオンに振り切れたのは、
+          <strong>情報を削るという企画側の決定が先にあったから</strong>で、
+          アート単独では選べない選択肢だった。
         </p>
       </EffortNote>
     </PageLayout>

@@ -114,6 +114,116 @@ export function EraDivider({
 }
 
 /**
+ * 予選版と本戦版を左右に並べて比べる箱。
+ *
+ * EraDivider が「ページの境目」なのに対し、こちらは1つの論点を並べて見せるためのもの。
+ * 差分を縦に積むのではなく、変更前後を同じ高さで突き合わせたいときに使う。
+ */
+export function EraCompare({
+  accent,
+  title,
+  before,
+  after,
+  beforeLabel = "予選版",
+  afterLabel = "本戦版",
+  note,
+}: {
+  accent: string;
+  title?: ReactNode;
+  before: ReactNode;
+  after: ReactNode;
+  beforeLabel?: string;
+  afterLabel?: string;
+  note?: ReactNode;
+}) {
+  return (
+    <div>
+      {title && (
+        <div className="mb-3 text-sm font-bold" style={{ color: "var(--color-ink)" }}>
+          {title}
+        </div>
+      )}
+      <div className="grid grid-cols-1 items-stretch gap-3 md:grid-cols-[1fr_auto_1fr]">
+        <div
+          className="flex flex-col rounded-xl border border-dashed p-4"
+          style={{ borderColor: "var(--color-border)", background: "var(--color-base-panel)" }}
+        >
+          <div className="mb-3 text-[0.65rem] font-bold tracking-widest" style={{ color: "var(--color-ink-faint)" }}>
+            {beforeLabel}
+          </div>
+          <div className="prose-body flex-1 text-sm">{before}</div>
+        </div>
+
+        <div className="flex items-center justify-center" aria-hidden>
+          <span className="text-2xl font-black" style={{ color: accent }}>
+            <span className="md:hidden">↓</span>
+            <span className="hidden md:inline">→</span>
+          </span>
+        </div>
+
+        <div
+          className="flex flex-col rounded-xl border p-4"
+          style={{
+            borderColor: "var(--color-border-soft)",
+            borderLeft: `5px solid ${accent}`,
+            background: "var(--color-base-raised)",
+          }}
+        >
+          <div className="mb-3 text-[0.65rem] font-extrabold tracking-widest" style={{ color: accent }}>
+            {afterLabel}
+          </div>
+          <div className="prose-body flex-1 text-sm">{after}</div>
+        </div>
+      </div>
+      {note && (
+        <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>
+          {note}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** 比較の中に画像を並べるための小さなタイル。 */
+export function CompareTile({
+  src,
+  label,
+  muted = false,
+  hideLabel = false,
+}: {
+  src: string;
+  label: string;
+  muted?: boolean;
+  /** 密に並べるときはキャプションを出さない（alt は残す）。 */
+  hideLabel?: boolean;
+}) {
+  return (
+    <div className="text-center">
+      <div
+        className="aspect-square overflow-hidden rounded-lg border"
+        style={{
+          borderColor: "var(--color-border-soft)",
+          background: muted ? "var(--color-base)" : "var(--color-base-panel)",
+        }}
+      >
+        <img
+          src={src}
+          alt={label}
+          loading="lazy"
+          className="h-full w-full object-contain p-1"
+          style={muted ? { filter: "grayscale(0.5)", opacity: 0.75 } : undefined}
+        />
+      </div>
+      {!hideLabel && (
+        <div className="mt-1.5 text-[0.65rem] leading-tight" style={{ color: "var(--color-ink-faint)" }}>
+          {label}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
  * ゾーンの見出し。ここから下がどのバージョンの話かを宣言する。
  * 予選ゾーンは資料然と、本戦ゾーンは主張の強い見た目にして、
  * スクロールしただけで「別物の話に入った」と分かるようにしている。
