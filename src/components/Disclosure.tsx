@@ -1,5 +1,11 @@
 import { useState, type ReactNode } from "react";
 
+/**
+ * 折りたたみ。
+ *
+ * 地の色は --disclosure-* を見る。暗い面（.panel-dark）の中に置かれたときに
+ * 「明るい地 × 白文字」で読めなくなるのを防ぐため、面の側から上書きできるようにしてある。
+ */
 interface DisclosureProps {
   summary: ReactNode;
   children: ReactNode;
@@ -12,14 +18,17 @@ export function Disclosure({ summary, children, defaultOpen = false, accent }: D
   return (
     <div
       className="rounded-xl border"
-      style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-panel)" }}
+      style={{
+        borderColor: "var(--disclosure-border, var(--color-border-soft))",
+        background: "var(--disclosure-bg, var(--color-base-panel))",
+      }}
     >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left"
       >
-        <span className="text-sm font-semibold md:text-base" style={{ color: "var(--color-ink)" }}>
+        <span className="text-sm font-semibold md:text-base" style={{ color: "var(--disclosure-ink, var(--color-ink))" }}>
           {summary}
         </span>
         <span
@@ -33,7 +42,7 @@ export function Disclosure({ summary, children, defaultOpen = false, accent }: D
         </span>
       </button>
       {open && (
-        <div className="prose-body border-t px-4 py-4" style={{ borderColor: "var(--color-border-soft)" }}>
+        <div className="prose-body border-t px-4 py-4" style={{ borderColor: "var(--disclosure-border, var(--color-border-soft))" }}>
           {children}
         </div>
       )}
