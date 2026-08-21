@@ -218,11 +218,13 @@ export default function ServerPage() {
         </Disclosure>
       </Panel>
 
-      <Panel tone="dark" title={<SectionHeading id="bandwidth">通信量を1/10にする</SectionHeading>} accent={accent}>
+      {/* 暗い面（tone="dark"）は使わない。共有部品の Disclosure が明るい地を前提にしており、
+          暗い面の中に置くと本文が読めなくなる（共有側を直すのは別の担当範囲）。 */}
+      <Panel era="final" title={<SectionHeading id="bandwidth">通信量を1/10にする</SectionHeading>} accent={accent}>
         <p>
           予選は<strong>全店の詳細を短い間隔で全員に配って</strong>いました。1試合で675MBに達していて、99人が会場のWi-Fiにぶら下がることを考えると現実的ではありません。
         </p>
-        <div className="mt-5 rounded-xl p-4" style={{ background: "rgba(255,255,255,0.06)" }}>
+        <div className="mt-5 rounded-xl border p-4" style={{ borderColor: "var(--color-border-soft)" }}>
           <BandwidthDiagram />
         </div>
         <p className="mt-4">
