@@ -163,52 +163,61 @@ export default function ArtPage() {
           リポジトリの追加履歴で数えると、変化がそのまま枚数に出ている。
         </p>
 
-        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* 絵を見せるのが目的の節なので、左右に割らず全幅で1枚ずつ大きく並べる */}
+        <div className="mt-8 space-y-10">
           <div
-            className="rounded-xl border border-dashed p-5"
+            className="rounded-2xl border border-dashed p-5 md:p-6"
             style={{ borderColor: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.03)" }}
           >
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-5xl font-black leading-none" style={{ color: "rgba(251,249,244,0.55)" }}>13</span>
-              <span className="text-base font-bold" style={{ color: "rgba(251,249,244,0.55)" }}>枚</span>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <div className="flex items-baseline gap-2">
+                <span className="text-6xl font-black leading-none md:text-7xl" style={{ color: "rgba(251,249,244,0.55)" }}>
+                  13
+                </span>
+                <span className="text-lg font-bold" style={{ color: "rgba(251,249,244,0.55)" }}>枚</span>
+                <span className="ml-1 text-base font-bold" style={{ color: "rgba(251,249,244,0.85)" }}>
+                  画面から消えた
+                </span>
+              </div>
+              <p className="text-xs" style={{ color: "rgba(251,249,244,0.5)" }}>
+                すべて「ライフの段階」を描いた絵
+              </p>
             </div>
-            <div className="mt-2 text-sm font-bold" style={{ color: "rgba(251,249,244,0.85)" }}>
-              画面から消えた
-            </div>
-            <p className="mt-0.5 text-xs" style={{ color: "rgba(251,249,244,0.5)" }}>
-              すべて「ライフの段階」を描いた絵
-            </p>
-            <div className="mt-4 grid grid-cols-5 gap-1.5 md:grid-cols-7">
+            <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
               {lifeArt.map(([src, label]) => (
-                <CompareTile key={label} src={src as string} label={label as string} muted hideLabel />
+                <CompareTile key={label} src={src as string} label={label as string} muted onDark />
               ))}
             </div>
           </div>
 
           <div
-            className="rounded-xl border p-5"
+            className="rounded-2xl border p-5 md:p-6"
             style={{ borderColor: "transparent", borderLeft: `5px solid ${accent}`, background: "rgba(255,255,255,0.06)" }}
           >
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-5xl font-black leading-none" style={{ color: accent }}>19</span>
-              <span className="text-base font-bold" style={{ color: accent }}>枚</span>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <div className="flex items-baseline gap-2">
+                <span className="text-6xl font-black leading-none md:text-7xl" style={{ color: accent }}>
+                  19
+                </span>
+                <span className="text-lg font-bold" style={{ color: accent }}>枚</span>
+                <span className="ml-1 text-base font-bold" style={{ color: "#fff" }}>
+                  新しく描いた
+                </span>
+              </div>
+              <p className="text-xs" style={{ color: "rgba(251,249,244,0.5)" }}>
+                情報の器（パネル8種・ネオン枠）と、手触り（手・舟皿6種）
+              </p>
             </div>
-            <div className="mt-2 text-sm font-bold" style={{ color: "#fff" }}>
-              新しく描いた
-            </div>
-            <p className="mt-0.5 text-xs" style={{ color: "rgba(251,249,244,0.5)" }}>
-              情報の器（パネル8種・ネオン枠）と、手触り（手・舟皿6種）
-            </p>
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              <CompareTile src={images.art.panel1} label="パネル枠" />
-              <CompareTile src={images.art.neonFrame} label="ネオン枠" />
-              <CompareTile src={images.art.hand} label="調理の手" />
-              <CompareTile src={images.art.tray2} label="舟皿 2個" />
-              <CompareTile src={images.art.tray4} label="舟皿 4個" />
-              <CompareTile src={images.art.tray8} label="舟皿 8個" />
-              <CompareTile src={images.art.takoyakiBurnt} label="失敗した玉" />
-              <CompareTile src={images.art.trayFail2} label="失敗の皿" />
-              <CompareTile src={images.art.panel5} label="パネル（別型）" />
+            <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
+              <CompareTile src={images.art.panel1} label="パネル枠" onDark />
+              <CompareTile src={images.art.neonFrame} label="ネオン枠" onDark />
+              <CompareTile src={images.art.hand} label="調理の手" onDark />
+              <CompareTile src={images.art.tray2} label="舟皿 2個" onDark />
+              <CompareTile src={images.art.tray4} label="舟皿 4個" onDark />
+              <CompareTile src={images.art.tray8} label="舟皿 8個" onDark />
+              <CompareTile src={images.art.takoyakiBurnt} label="失敗した玉" onDark />
+              <CompareTile src={images.art.trayFail2} label="失敗の皿" onDark />
+              <CompareTile src={images.art.panel5} label="パネル（別型）" onDark />
             </div>
           </div>
         </div>

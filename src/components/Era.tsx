@@ -190,32 +190,42 @@ export function CompareTile({
   label,
   muted = false,
   hideLabel = false,
+  onDark = false,
 }: {
   src: string;
   label: string;
   muted?: boolean;
   /** 密に並べるときはキャプションを出さない（alt は残す）。 */
   hideLabel?: boolean;
+  /** 濃い面の上に置くとき。素材が白背景でも沈まないように地を明るくする。 */
+  onDark?: boolean;
 }) {
   return (
     <div className="text-center">
       <div
         className="aspect-square overflow-hidden rounded-lg border"
         style={{
-          borderColor: "var(--color-border-soft)",
-          background: muted ? "var(--color-base)" : "var(--color-base-panel)",
+          borderColor: onDark ? "rgba(255,255,255,0.14)" : "var(--color-border-soft)",
+          background: onDark
+            ? "rgba(251,249,244,0.92)"
+            : muted
+              ? "var(--color-base)"
+              : "var(--color-base-panel)",
         }}
       >
         <img
           src={src}
           alt={label}
           loading="lazy"
-          className="h-full w-full object-contain p-1"
-          style={muted ? { filter: "grayscale(0.5)", opacity: 0.75 } : undefined}
+          className="h-full w-full object-contain p-2"
+          style={muted ? { filter: "grayscale(0.45)", opacity: 0.85 } : undefined}
         />
       </div>
       {!hideLabel && (
-        <div className="mt-1.5 text-[0.65rem] leading-tight" style={{ color: "var(--color-ink-faint)" }}>
+        <div
+          className="mt-2 text-[0.68rem] leading-tight"
+          style={{ color: onDark ? "rgba(251,249,244,0.6)" : "var(--color-ink-faint)" }}
+        >
           {label}
         </div>
       )}
