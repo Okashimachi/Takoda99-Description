@@ -223,6 +223,13 @@ pre.codeblock {
 .panel-dark {
   background: #1c1610;
   color: var(--color-ink-inverse);
+
+  /* 暗い面の中に置かれた折りたたみは、地も暗くする。
+     Disclosure は明るい地を既定にしているので、ここで上書きしないと
+     「明るい地 × 白文字」になって本文が読めない（コントラスト比 1.02）。 */
+  --disclosure-bg: rgba(255, 255, 255, 0.06);
+  --disclosure-border: rgba(255, 255, 255, 0.16);
+  --disclosure-ink: #fff;
 }
 .panel-dark .prose-body p,
 .panel-dark .prose-body ul,
