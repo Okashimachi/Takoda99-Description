@@ -24,23 +24,30 @@ function PointList({ items }: { items: { label: string; body: string }[] }) {
     // 余白はインラインで指定する。共有CSSの .prose-body li に margin-bottom が
     // 入っており、Tailwind の space-y-* がそれに負けて 5.6px まで詰まるため。
     // 共有CSS側は他ページも使うので触らない。
-    // list-style と padding もインラインで打ち消す。共有CSSの .prose-body ul が
-    // disc と padding-left を持っており、Tailwind の list-none / pl-0 では消えず、
-    // 中黒と左の罫線が二重に出てしまう。
-    <ul className="mt-4" style={{ listStyle: "none", paddingLeft: 0 }}>
+    // 🔴 余白・list-style・padding はすべてインラインで指定する。
+    // 共有CSS（.prose-body ul / li / p）が margin と list-style を持っており、
+    // Tailwind の mt-*, pl-*, list-none はそれに負けて効かない。
+    // 共有CSS側は他ページも使うので触らない。
+    <ul style={{ listStyle: "none", paddingLeft: 0, marginTop: "1.5rem", marginBottom: "1.5rem" }}>
       {items.map((it, i) => (
         <li
           key={it.label}
-          className="pl-4"
           style={{
             borderLeft: `2px solid ${accent}`,
-            marginBottom: i === items.length - 1 ? 0 : "1.5rem",
+            paddingLeft: "1.25rem",
+            marginBottom: i === items.length - 1 ? 0 : "1.75rem",
           }}
         >
-          <div className="text-[0.95rem] font-bold leading-snug" style={{ color: "var(--color-ink)" }}>
+          <div
+            className="text-[0.95rem] font-bold leading-snug"
+            style={{ color: "var(--color-ink)" }}
+          >
             {it.label}
           </div>
-          <p className="mt-1.5 text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>
+          <p
+            className="text-sm leading-relaxed"
+            style={{ color: "var(--color-ink-dim)", marginTop: "0.6rem", marginBottom: 0 }}
+          >
             {it.body}
           </p>
         </li>
