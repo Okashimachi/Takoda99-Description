@@ -234,6 +234,55 @@ export function CompareTile({
 }
 
 /**
+ * 実機キャプチャ用のタイル。
+ *
+ * CompareTile が正方形なのは素材1枚を並べるためで、16:9のスクリーンショットには使えない。
+ * こちらは画面の横幅をそのまま活かし、注目してほしい点をキャプションで添える。
+ */
+export function Shot({
+  src,
+  alt,
+  caption,
+  muted = false,
+  onDark = false,
+}: {
+  src: string;
+  alt: string;
+  caption?: ReactNode;
+  /** 予選版など「過去の記録」として沈めて見せるとき。 */
+  muted?: boolean;
+  onDark?: boolean;
+}) {
+  return (
+    <figure className="m-0">
+      <div
+        className={muted ? "overflow-hidden rounded-xl border border-dashed" : "overflow-hidden rounded-xl border"}
+        style={{
+          borderColor: onDark ? "rgba(255,255,255,0.18)" : muted ? "var(--color-border)" : "var(--color-border-soft)",
+          background: onDark ? "rgba(0,0,0,0.35)" : "var(--color-base-panel)",
+        }}
+      >
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className="block w-full"
+          style={muted ? { filter: "grayscale(0.4)", opacity: 0.8 } : undefined}
+        />
+      </div>
+      {caption && (
+        <figcaption
+          className="mt-2 text-xs leading-relaxed"
+          style={{ color: onDark ? "rgba(251,249,244,0.6)" : "var(--color-ink-faint)" }}
+        >
+          {caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/**
  * ゾーンの見出し。ここから下がどのバージョンの話かを宣言する。
  * 予選ゾーンは資料然と、本戦ゾーンは主張の強い見た目にして、
  * スクロールしただけで「別物の話に入った」と分かるようにしている。

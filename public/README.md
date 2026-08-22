@@ -5,7 +5,26 @@
 
 ## 取り込み元
 
-すべて `Takoda99-Unity/Unity/Assets/Images/` からの取り込み。
+`screens/final-*` は**実機の画面キャプチャ**、それ以外は
+`Takoda99-Unity/Unity/Assets/Images/` からの取り込み。
+
+### 実機キャプチャ（本戦版）
+
+| public | 元ファイル |
+| --- | --- |
+| `screens/final-matchmaking` | `source-images/本番用/マッチング完了画面.png` |
+| `screens/final-ingame` | `source-images/本番用/試合中画面.png` |
+| `screens/final-result` | `source-images/本番用/リザルト画面.png` |
+
+**元のPNGは `source-images/`（リポジトリ外・gitignore済み）に置く。**
+`public/` はビルド時にそのまま配信物へコピーされるため、
+数MB級の元画像を置いたままにすると配信サイズがそのまま膨らむ。
+
+`screens/match-main`・`match-ingame`・`result` は**予選版**のキャプチャで、
+本戦版と並べて比較するために残している（`screens/matchmaking` だけは
+実機ではなく背景アートそのもの）。
+
+### Unity の素材
 
 | public | 取り込み元 |
 | --- | --- |
@@ -66,7 +85,7 @@
 | `favicon.png`（180px） | `index.html` が `type="image/png"` で参照している |
 | `ogp.jpg`（1200x630） | OGP画像。クローラのWebP対応が読めないためJPEGで用意する |
 
-合計 約20MB → 約1.9MB。
+合計 約20MB → 約1.9MB（本戦版キャプチャ3枚を足して約2.8MB）。
 
 ## まだ無い素材
 

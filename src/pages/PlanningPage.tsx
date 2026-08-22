@@ -2,7 +2,7 @@ import { PageLayout, SectionHeading } from "../components/PageLayout";
 import { Panel } from "../components/Panel";
 import { Disclosure } from "../components/Disclosure";
 import { DecisionLog, DiffTable, EffortNote, GitHubLink, TermTag } from "../components/Bits";
-import { EraDivider, EraStamp, EraZoneHeader } from "../components/Era";
+import { EraDivider, EraStamp, EraZoneHeader, Shot } from "../components/Era";
 import { PullQuote, StatRow } from "../components/Display";
 import { images } from "../assets/images";
 import { sections } from "../lib/accentTheme";
@@ -293,6 +293,18 @@ export default function PlanningPage() {
             ]}
           />
         </div>
+        <div className="mt-6">
+          <Shot
+            src={images.screens.final.ingame}
+            alt="本戦版の対戦中の画面"
+            caption={
+              <>
+                本戦版の対戦中。<strong>画面に残っている数値は「順位」と「スコア」だけ</strong>で、
+                体力ゲージも評価バーも無い。上部の「76位以下が脱落」が、いま何をすれば生き残れるかを直接示している。
+              </>
+            }
+          />
+        </div>
         <p className="mt-5 text-sm" style={{ color: "var(--color-ink-dim)" }}>
           <strong>削るのは内部処理だけで、画面は賑やかなまま。</strong>
           客キャラクター・属性の見た目・行列・背景は本戦でも画面に出る。
@@ -322,6 +334,29 @@ export default function PlanningPage() {
               { value: "3", unit: "分", label: "予選のプレゼン枠", note: "1位が決まらないまま残り20〜30人で時間切れ", muted: true },
               { value: "10", unit: "秒", label: "弱い人の体験時間", note: "本戦では最低20秒に引き上げた", muted: true },
             ]}
+          />
+        </div>
+        <div className="my-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Shot
+            src={images.screens.matchIngame}
+            alt="予選版の対戦中の画面"
+            muted
+            caption={
+              <>
+                <strong>予選版。</strong>左右に敷き詰めた98店ぶんのタイルが、それぞれの店の体力を表している。
+                情報としては出ていたが、実際に見られていたのは中央のお題だけだった。
+              </>
+            }
+          />
+          <Shot
+            src={images.screens.final.ingame}
+            alt="本戦版の対戦中の画面"
+            caption={
+              <>
+                <strong>本戦版。</strong>同じ場所に置いたのは「上位10店のスコア」と「いま脱落圏内にいる店名」。
+                <strong>見なくても中央だけで戦えるが、見れば残り何位ぶん余裕があるか分かる</strong>という関係に変えた。
+              </>
+            }
           />
         </div>
         <p className="mt-4">因果構造は1本に繋がっていた。</p>
@@ -437,6 +472,20 @@ export default function PlanningPage() {
 
       <Panel tone="dark" title={<SectionHeading id="honsen-cull">20秒等間隔 × 6段階の足切り</SectionHeading>} accent={accent}>
         <p>脱落経路を1本に畳んだ結果、脱落は<strong>時刻で決まる</strong>ようになった。</p>
+        <div className="mt-6 grid grid-cols-1 items-center gap-5 md:grid-cols-[2fr_3fr]">
+          <p className="text-sm leading-relaxed" style={{ color: "rgba(251,249,244,0.75)" }}>
+            出発点は<strong style={{ color: "#fff" }}>常に99店</strong>。
+            人間が99人に満たない場合はBotで補完するため、
+            <strong style={{ color: "#fff" }}>足切りの人数表は毎試合まったく同じ数字で進む</strong>。
+            「20秒ごとに何人減るか」を固定できるのは、この前提があるから。
+          </p>
+          <Shot
+            src={images.screens.final.matchmaking}
+            alt="マッチング完了画面"
+            onDark
+            caption="マッチング完了。99店ぶんのアイコンが並び、そのまま試合が始まる。"
+          />
+        </div>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[480px] border-collapse text-sm">
             <thead>
@@ -467,6 +516,19 @@ export default function PlanningPage() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="mt-6">
+          <Shot
+            src={images.screens.final.ingame}
+            alt="脱落ラインを表示している本戦版の画面"
+            onDark
+            caption={
+              <>
+                <strong>「76位以下が脱落」と、次の足切りまでの秒読み（8秒 / 1回目）を常時出している。</strong>
+                右側の赤いタイルが、いま切られる圏内にいる店。表の1行が、そのまま画面のこの部分になっている。
+              </>
+            }
+          />
         </div>
         <p className="mt-5">
           切る割合は <code>24% → 27% → 36% → 43% → 50% → 100%</code> と単調に増加する。
@@ -514,6 +576,25 @@ export default function PlanningPage() {
           </a>
           ）。
         </p>
+        <div className="my-6 grid grid-cols-1 items-start gap-5 md:grid-cols-[3fr_2fr]">
+          <Shot
+            src={images.screens.final.result}
+            alt="本戦版のリザルト画面"
+            caption="全員が同じタイミングでこのリザルトに入る。勝者だけが別の状態に取り残されることがない。"
+          />
+          <div>
+            <p className="text-sm leading-relaxed">
+              <strong>サーバーが返すのは順位とスコアだけ。</strong>
+              たこ焼き数・総打鍵数・ミス打鍵数・平均正確率・提供数・生存時間は、
+              <strong>「なぜその順位だったか」をプレイヤー自身が言葉にできるようにするため</strong>に並べている。
+            </p>
+            <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--color-ink-dim)" }}>
+              対戦中は順位が主役でスコアは補助表示だが、
+              ここでは逆に<strong>数字を最大サイズで出す</strong>。
+              予選で最も多かった「なぜ負けたか分からない」への、直接の回答にあたる画面。
+            </p>
+          </div>
+        </div>
         <Disclosure summary="意図した副産物：決勝の10人＝上位10名リストと完全に一致する" accent={accent}>
           <pre className="codeblock">{`100秒時点で、上位10名リストが、そのまま生存者全員になる
   → 決勝では「リストに映っている全員が敵」という状態が生まれる

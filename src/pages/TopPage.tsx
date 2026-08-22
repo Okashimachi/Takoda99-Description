@@ -4,7 +4,7 @@ import { navOrder, sections } from "../lib/accentTheme";
 import { ArchDiagram } from "../components/ArchDiagram";
 
 import { Disclosure } from "../components/Disclosure";
-import { EraDivider } from "../components/Era";
+import { EraDivider, Shot } from "../components/Era";
 
 
 const rules = [
@@ -198,7 +198,7 @@ export default function TopPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `linear-gradient(180deg, rgba(251,249,244,0.75), rgba(251,249,244,0.97)), url(${images.screens.matchMain})`,
+            backgroundImage: `linear-gradient(180deg, rgba(251,249,244,0.78), rgba(251,249,244,0.97)), url(${images.screens.final.ingame})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -358,22 +358,75 @@ export default function TopPage() {
           </div>
       </TopSection>
 
-      <TopSection n="03" title="ゲーム画面">
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <TopSection
+        n="03"
+        title="ゲーム画面"
+        lead="試合は マッチング → 120秒の対戦 → リザルト の3画面で完結する。以下はすべて本戦版の実機。"
+      >
+          {/* 試合中の画面が主役。ここだけ全幅で大きく出す */}
+          <figure className="m-0">
+            <div
+              className="overflow-hidden rounded-2xl border"
+              style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-panel)" }}
+            >
+              <img
+                src={images.screens.final.ingame}
+                alt="対戦中の画面"
+                className="block w-full"
+              />
+            </div>
+            <figcaption className="mt-3 grid grid-cols-1 gap-2 text-xs md:grid-cols-3" style={{ color: "var(--color-ink-dim)" }}>
+              <span>
+                <strong style={{ color: "var(--color-ink)" }}>中央：</strong>自店の屋台とお題。見るべきものはここに集約
+              </span>
+              <span>
+                <strong style={{ color: "var(--color-ink)" }}>上部：</strong>「76位以下が脱落」と次の足切りまでの秒読み
+              </span>
+              <span>
+                <strong style={{ color: "var(--color-ink)" }}>左右：</strong>上位10店のスコアと、いま切られる圏内の店名
+              </span>
+            </figcaption>
+          </figure>
+
+          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2">
             {[
-              { src: images.screens.matchMain, caption: "マッチ画面（自店の屋台と注文）" },
-              { src: images.screens.matchIngame, caption: "対戦中の盤面（99店のスキャン）" },
+              {
+                src: images.screens.final.matchmaking,
+                caption: "マッチング完了。人間が足りない分はBotで埋め、常に99店で始まる",
+              },
+              {
+                src: images.screens.final.result,
+                caption: "リザルト。順位・たこ焼き数・スコア・正確率を大きく出す",
+              },
             ].map((s) => (
-              <figure key={s.src}>
+              <figure key={s.src} className="m-0">
                 <div
                   className="overflow-hidden rounded-2xl border"
                   style={{ borderColor: "var(--color-border-soft)", background: "var(--color-base-panel)" }}
                 >
-                  <img src={s.src} alt={s.caption} className="w-full object-contain" />
+                  <img src={s.src} alt={s.caption} loading="lazy" className="block w-full" />
                 </div>
                 <figcaption className="mt-2 text-xs" style={{ color: "var(--color-ink-faint)" }}>{s.caption}</figcaption>
               </figure>
             ))}
+          </div>
+
+          <div className="mt-6">
+            <Disclosure summary="予選版の画面と並べて見る（同じ「対戦中」の画面）" accent="var(--color-top)">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <Shot
+                  src={images.screens.matchIngame}
+                  alt="予選版の対戦中の画面"
+                  muted
+                  caption="予選版：98店ぶんの体力を敷き詰めていた。屋台の傷み・暖簾の破れ・提灯で体力を表現していたが、視線はお題にしか行っていなかった。"
+                />
+                <Shot
+                  src={images.screens.final.ingame}
+                  alt="本戦版の対戦中の画面"
+                  caption="本戦版：体力の表示をやめ、順位・スコア・脱落ラインだけを大きく出す。1枚あたりの面積が増え、遠目でも何が起きているか分かる。"
+                />
+              </div>
+            </Disclosure>
           </div>
       </TopSection>
 

@@ -2,7 +2,7 @@ import { PageLayout, SectionHeading } from "../components/PageLayout";
 import { Panel } from "../components/Panel";
 import { Disclosure } from "../components/Disclosure";
 import { DecisionLog, EffortNote } from "../components/Bits";
-import { CompareTile, EraCompare } from "../components/Era";
+import { CompareTile, EraCompare, Shot } from "../components/Era";
 import { Callout, PullQuote } from "../components/Display";
 import { sections } from "../lib/accentTheme";
 import { images } from "../assets/images";
@@ -11,6 +11,7 @@ const accent = sections.art.accent;
 
 const toc = [
   { id: "verdict", label: "何がどう変わったか" },
+  { id: "screens", label: "画面まるごと比較" },
   { id: "role", label: "絵の役割が入れ替わった" },
   { id: "life", label: "消えた13枚" },
   { id: "tone", label: "トーンの決定" },
@@ -52,7 +53,7 @@ export default function ArtPage() {
       title="アート"
       lead="予選の絵を、本戦でどう作り替えたか。変更前後を並べて見せます。"
       ownerLine="担当: たまちゃ"
-      heroImage={images.screens.matchmaking}
+      heroImage={images.screens.final.matchmaking}
       toc={toc}
     >
       <Panel tone="flat" accent={accent}>
@@ -108,6 +109,118 @@ export default function ArtPage() {
             </tbody>
           </table>
         </div>
+      </Panel>
+
+      <Panel tone="dark" title={<SectionHeading id="screens">画面まるごと比較：予選版 → 本戦版</SectionHeading>} accent={accent}>
+        <p>
+          素材単位で見る前に、<strong>完成した画面そのものを並べる</strong>。
+          個々の絵の巧拙ではなく、<strong>1枚あたりの面積と、地の明るさが変わった</strong>ことが本戦の変更の実体。
+        </p>
+
+        <div className="mt-8 space-y-10">
+          <div>
+            <div className="text-sm font-extrabold" style={{ color: "#fff" }}>対戦中の画面</div>
+            <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2">
+              <Shot
+                src={images.screens.matchIngame}
+                alt="予選版の対戦中の画面"
+                muted
+                onDark
+                caption={
+                  <>
+                    <strong>予選版。</strong>明るい木と紙のトーン。左右に98店ぶんのタイルを敷き詰め、
+                    それぞれの体力を屋台の傷み具合で描き分けていた。
+                    <strong>1店あたりの面積が親指の爪ほどしかなく、4段階の描き分けは判別できない。</strong>
+                  </>
+                }
+              />
+              <Shot
+                src={images.screens.final.ingame}
+                alt="本戦版の対戦中の画面"
+                onDark
+                caption={
+                  <>
+                    <strong>本戦版。</strong>地を黒に落とし、ネオンの枠に文字を載せる形へ。
+                    同じ左右の領域に置いたのは<strong>上位10店と脱落圏内の店だけ</strong>で、
+                    <strong>1枚あたりの面積が10倍近くになった</strong>。会場の後ろからでも順位が読める。
+                  </>
+                }
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="text-sm font-extrabold" style={{ color: "#fff" }}>リザルト画面</div>
+            <div className="mt-4 grid grid-cols-1 items-start gap-5 md:grid-cols-2">
+              <div
+                className="flex h-full flex-col justify-center rounded-xl border border-dashed p-6"
+                style={{ borderColor: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.03)" }}
+              >
+                <div className="text-[0.65rem] font-bold tracking-widest" style={{ color: "rgba(251,249,244,0.5)" }}>
+                  予選版
+                </div>
+                <p className="mt-3 text-sm leading-relaxed" style={{ color: "rgba(251,249,244,0.72)" }}>
+                  <strong style={{ color: "#fff" }}>専用の絵が無かった。</strong>
+                  屋台のカウンターの板をそのまま地に使い、その上に文字を置いていただけで、
+                  リポジトリに残っているのも <code>Result/BG.png</code>（木目のテクスチャ）1枚だけ。
+                  順位による出し分けも無い。
+                </p>
+                <p className="mt-3 text-xs" style={{ color: "rgba(251,249,244,0.45)" }}>
+                  時間が無かったための「その場しのぎの1パターン」で、
+                  ここが本戦で最も作り直しの量が多かった画面になる。
+                </p>
+              </div>
+              <Shot
+                src={images.screens.final.result}
+                alt="本戦版のリザルト画面"
+                onDark
+                caption={
+                  <>
+                    <strong>本戦版。</strong>たこ焼きを敷き詰めた専用の背景を新規に描き、
+                    数値ひとつずつにネオン枠を与えて<strong>項目ごとに色を変えている</strong>。
+                    順位に応じて<strong>4パターン</strong>に出し分ける。
+                  </>
+                }
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="text-sm font-extrabold" style={{ color: "#fff" }}>マッチング画面</div>
+            <div className="mt-4 grid grid-cols-1 items-start gap-5 md:grid-cols-2">
+              <Shot
+                src={images.screens.matchmaking}
+                alt="予選版のマッチング画面の背景"
+                muted
+                onDark
+                caption={
+                  <>
+                    <strong>予選版。</strong>描き込んだ背景イラストの上に、待機中のテキストを載せるだけ。
+                    絵は<strong>雰囲気を作る役</strong>で、情報は持っていない。
+                  </>
+                }
+              />
+              <Shot
+                src={images.screens.final.matchmaking}
+                alt="本戦版のマッチング完了画面"
+                onDark
+                caption={
+                  <>
+                    <strong>本戦版。</strong>同じ背景を暗く沈め、
+                    <strong>99店ぶんのアイコンを線画のネオンで描き分けて前に出した</strong>。
+                    絵が「これから誰と戦うのか」という情報そのものになっている。
+                  </>
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-8 text-base leading-relaxed">
+          3画面に共通しているのは<strong>「地を暗くして、発光する要素を主役にした」</strong>という一手。
+          明るい地の上では、情報を大きくすると画面が埋まって騒がしくなる。
+          <strong>暗い地なら、大きくしても静かなまま</strong>で、遠目からでも視線が集まる。
+        </p>
       </Panel>
 
       <Panel title={<SectionHeading id="role">絵の役割が入れ替わった</SectionHeading>} accent={accent}>
@@ -278,14 +391,16 @@ export default function ArtPage() {
         </div>
         <div className="mt-5 overflow-hidden rounded-xl border" style={{ borderColor: "var(--color-border-soft)" }}>
           <img
-            src={images.screens.matchmaking}
-            alt="マッチング画面"
+            src={images.screens.final.matchmaking}
+            alt="本戦版のマッチング完了画面"
             loading="lazy"
-            className="w-full object-cover"
+            className="block w-full"
           />
         </div>
         <p className="mt-2 text-xs" style={{ color: "var(--color-ink-faint)" }}>
-          通天閣・道頓堀モチーフの背景。ネオンの発光をそのまま画面のトーンに使っている。
+          決定したトーンがそのまま出ている画面。通天閣・道頓堀モチーフの背景を暗く沈め、
+          99店ぶんのアイコンをネオンの線画だけで描き分けている。
+          <strong>色数を増やしたのではなく、地を黒くして発光する線を主役にした</strong>のがこのトーンの実体。
         </p>
       </Panel>
 
@@ -361,9 +476,6 @@ export default function ArtPage() {
               <div className="mb-3 grid grid-cols-3 gap-2">
                 <CompareTile src={images.art.hand} label="手" />
                 <CompareTile src={images.art.tray8} label="舟皿 8個" />
-              <CompareTile src={images.art.takoyakiBurnt} label="失敗した玉" />
-              <CompareTile src={images.art.trayFail2} label="失敗の皿" />
-              <CompareTile src={images.art.panel5} label="パネル（別型）" />
                 <CompareTile src={images.art.takoyakiBurnt} label="失敗した玉" />
               </div>
               <p>

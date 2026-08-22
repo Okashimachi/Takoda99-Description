@@ -9,12 +9,20 @@ export const images = {
   },
   screens: {
     title: "/screens/title.webp",
+    // 予選版の実機キャプチャ。本戦版と並べて比較するために残している。
     matchMain: "/screens/match-main.webp",
     matchIngame: "/screens/match-ingame.webp",
+    // 背景アートそのもの（マッチング画面の地）。実機のUIは入っていない。
     matchmaking: "/screens/matchmaking.webp",
     result: "/screens/result.webp",
     eliminated: null,
     debugPanel: null,
+    /** 本戦版の実機キャプチャ。いま遊べるのはこちら。 */
+    final: {
+      matchmaking: "/screens/final-matchmaking.webp",
+      ingame: "/screens/final-ingame.webp",
+      result: "/screens/final-result.webp",
+    },
   },
   // 属性との対応は CustomerSpriteLibrary.asset の割り当てに準拠。
   // Normal=通常客 / Bonus=お笑い芸人 / Claimer=ヒョウ柄おばちゃん / Buzz=JK。
